@@ -76,9 +76,9 @@
         android:layout_marginStart="@dimen/indent"
         android:background="@android:color/transparent"
         android:contentDescription="@string/description_likes"
-        android:src="@drawable/ic_baseline_favorite_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@drawable/ic_baseline_favorite_24" />
 
     <TextView
         android:id="@+id/countLikes"
@@ -96,9 +96,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_baseline_share_24"
+        android:contentDescription="@string/description_reposts"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/countLikes" />
+        app:layout_constraintStart_toEndOf="@id/countLikes"
+        tools:src="@drawable/ic_baseline_share_24" />
 
     <TextView
         android:id="@+id/countReposts"
@@ -125,8 +126,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/indent"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_baseline_remove_red_eye_24"
+        android:contentDescription="@string/description_count_views"
         app:layout_constraintBottom_toBottomOf="@id/countViews"
         app:layout_constraintEnd_toStartOf="@id/countViews"
-        app:layout_constraintTop_toTopOf="@id/countViews" />
+        app:layout_constraintTop_toTopOf="@id/countViews"
+        tools:src="@drawable/ic_baseline_remove_red_eye_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

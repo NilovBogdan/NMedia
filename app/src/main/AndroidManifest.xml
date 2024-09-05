@@ -12,9 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NMedia"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/post_avatar_drawable.xml" />
+
 
         <activity
             android:name=".MainActivity"
