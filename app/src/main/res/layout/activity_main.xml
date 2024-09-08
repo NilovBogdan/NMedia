@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/description_post_author_avatar"
+        android:src="@drawable/ic_netology_48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@sample/post_avatars" />
@@ -70,24 +71,25 @@
         tools:text="@sample/posts.json/data/content" />
 
     <ImageButton
-        android:id="@+id/likes"
+        android:id="@+id/like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/indent"
+        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/description_likes"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/content"
         app:layout_constraintStart_toStartOf="parent"
-        tools:src="@drawable/ic_baseline_favorite_24" />
+        app:srcCompat="@drawable/ic_baseline_favorite_24" />
 
     <TextView
-        android:id="@+id/countLikes"
+        android:id="@+id/liked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/indent"
-        app:layout_constraintBottom_toBottomOf="@id/likes"
-        app:layout_constraintStart_toEndOf="@id/likes"
-        app:layout_constraintTop_toTopOf="@id/likes"
+        app:layout_constraintBottom_toBottomOf="@id/like"
+        app:layout_constraintStart_toEndOf="@id/like"
+        app:layout_constraintTop_toTopOf="@id/like"
         tools:text="@sample/posts.json/data/likes" />
 
     <ImageButton
@@ -95,11 +97,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/description_reposts"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/countLikes"
-        tools:src="@drawable/ic_baseline_share_24" />
+        app:layout_constraintTop_toBottomOf="@id/content"
+        app:layout_constraintStart_toEndOf="@id/liked"
+        app:srcCompat="@drawable/ic_baseline_share_24" />
 
     <TextView
         android:id="@+id/countReposts"
@@ -116,7 +119,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/indent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/content"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="@sample/posts.json/data/views" />
 
@@ -130,5 +134,5 @@
         app:layout_constraintBottom_toBottomOf="@id/countViews"
         app:layout_constraintEnd_toStartOf="@id/countViews"
         app:layout_constraintTop_toTopOf="@id/countViews"
-        tools:src="@drawable/ic_baseline_remove_red_eye_24" />
+        app:srcCompat="@drawable/ic_baseline_remove_red_eye_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
