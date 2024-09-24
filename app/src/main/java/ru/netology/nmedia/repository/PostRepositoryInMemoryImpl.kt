@@ -18,7 +18,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0,
             0
         ),
         Post(
@@ -30,7 +29,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             "0",
             likedByMe = false,
-            0,
             0,
             0
         ),
@@ -44,7 +42,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0,
             0
         ),
         Post(
@@ -56,7 +53,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             "0",
             likedByMe = false,
-            0,
             0,
             0
         ),
@@ -70,7 +66,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0,
             0
         ),
         Post(
@@ -82,7 +77,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             "0",
             likedByMe = false,
-            0,
             0,
             0
         ),
@@ -96,7 +90,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0,
             0
         ),
         Post(
@@ -109,7 +102,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0,
             0
         ),
         Post(
@@ -121,7 +113,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             "0",
             likedByMe = false,
-            0,
             0,
             0
         ),
@@ -159,7 +150,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
     }
 
     override fun shareById(id: Long) {
-        println("repost+")
         var countRep: Int
         posts = posts.map {
             if (it.id == id) {
@@ -176,21 +166,6 @@ class PostRepositoryInMemoryImpl : PostRepository {
         data.value = posts
     }
 
-    override fun views(id: Long) {
-        var countViews: Int
-        posts = posts.map {
-            if (it.id == id) {
-                countViews = it.countViews
-                countViews++
-                it.copy(
-                    countViews = it.countViews + 1,
-                    views = logicLikesAndRepost(countViews.toDouble())
-                )
-            } else {
-                it
-            }
-        }
-    }
 
     fun logicLikesAndRepost(count: Double): String {
         val cl: Double = (count / 1000)
