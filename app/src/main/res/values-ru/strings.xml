@@ -9,6 +9,14 @@
     <string name="description_reposts">Репост</string>
     <string name="description_count_repost">Количество репостов</string>
     <string name="description_count_views">Количество просмотров</string>
+    <string name="menu_remove">Удалить</string>
+    <string name="post_text">Введите текст</string>
+    <string name="description_post_save">Сохранить</string>
+    <string name="error_empty_content">Содержимое не может быть пустым</string>
+    <string name="menu_edit">Редатировать</string>
+    <string name="edit_message">Редактировать сообщение</string>
+    <string name="description_create">Значек редактирования</string>
+    <string name="description_close">Отмена</string>
 
 
 </resources>

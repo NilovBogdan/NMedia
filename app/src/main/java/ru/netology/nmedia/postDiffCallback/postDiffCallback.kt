@@ -1,5 +1,4 @@
 package ru.netology.nmedia.postDiffCallback
-
 import androidx.recyclerview.widget.DiffUtil
 import ru.netology.nmedia.dto.Post
 
