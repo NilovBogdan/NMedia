@@ -5,6 +5,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.OnInteractionListener
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostsAdapter
@@ -65,6 +67,8 @@ class MainActivity : AppCompatActivity() {
                         clearFocus()
                         AndroidUtils.hideKeyboard(it)
                     }
+
+                    viewModel.edit(post.copy(id = 0L))
                 }
                 setText(post.content)
                 binding.content.focusAndShowKeyboard()

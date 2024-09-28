@@ -35,6 +35,9 @@ class PostViewModel : ViewModel() {
         }
     }
     fun edit(post: Post){
+        if (post.id == 0L){
+            edited.value = empty
+        }
         edited.value = post
     }
 }
