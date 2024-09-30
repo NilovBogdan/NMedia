@@ -1,5 +1,7 @@
 package ru.netology.nmedia.adapter
 
+import android.content.Intent
+import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.OnInteractionListener
@@ -20,6 +22,18 @@ class PostViewHolder(
             countViews.text = post.views
             like.isChecked = post.likedByMe
             like.text = post.like
+            if (post.urlVideo.isNotBlank()){
+                videoGroup.visibility = View.VISIBLE
+            }else{
+                videoGroup.visibility = View.INVISIBLE
+                videoGroup.visibility = View.GONE
+            }
+            play.setOnClickListener {
+                onInteractionListener.playVideo(post.urlVideo)
+            }
+            preview.setOnClickListener {
+                onInteractionListener.playVideo(post.urlVideo)
+            }
             like.setOnClickListener {
                 onInteractionListener.onLike(post)
             }

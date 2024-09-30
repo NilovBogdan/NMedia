@@ -15,7 +15,8 @@ private val empty = Post(
     "",
     false,
     0,
-    0
+    0,
+    ""
 )
 class PostViewModel : ViewModel() {
     private val repository: PostRepository = PostRepositoryInMemoryImpl()
@@ -23,6 +24,7 @@ class PostViewModel : ViewModel() {
     fun likeById(id: Long) = repository.likeById(id)
     fun shareById(id: Long) = repository.shareById(id)
     fun removeById(id: Long) = repository.removeById(id)
+    fun playVideo(url: String) = repository.playVideo(url)
     val edited = MutableLiveData(empty)
 
     fun applyChangesAndSave(newText: String){

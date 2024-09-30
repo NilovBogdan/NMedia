@@ -19,7 +19,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -31,7 +32,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -43,7 +45,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -55,7 +58,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -67,7 +71,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -79,7 +84,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -91,7 +97,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -103,7 +110,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            ""
         ),
         Post(
             id = nextId++,
@@ -115,7 +123,8 @@ class PostRepositoryInMemoryImpl : PostRepository {
             "0",
             likedByMe = false,
             0,
-            0
+            0,
+            "https://yandex.ru/video/preview/12564216187211080965?from=tabbar&parent-reqid=1727696109107530-12935718397799895785-balancer-l7leveler-kubr-yp-sas-130-BAL&text=превью+для+видео+универсальное"
         ),
     ).reversed()
 
@@ -190,6 +199,9 @@ class PostRepositoryInMemoryImpl : PostRepository {
             data.value = posts
         }
 
+    }
+
+    override fun playVideo(url: String) {
     }
 
 

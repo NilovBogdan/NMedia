@@ -15,4 +15,8 @@
         <item name="iconTint">@color/gray</item>
         <item name="android:minWidth">0dp</item>
     </style>
+    <style name="Widget.AppThem.AddButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/blue</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
 </resources>
