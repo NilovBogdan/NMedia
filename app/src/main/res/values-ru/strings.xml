@@ -20,7 +20,7 @@
     <string name="chooser_share_post">Поделиться публикацией</string>
     <string name="save">Сохранить</string>
     <string name="description_play_video">Включить видео</string>
-    <string name="description_preview">"Превью "</string>
+    <string name="description_preview">Обложка видео</string>
 
 
 </resources>

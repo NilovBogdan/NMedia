@@ -27,7 +27,8 @@ class PostViewHolder(
                 videoGroup.visibility = View.INVISIBLE
                 videoGroup.visibility = View.GONE
             }
-            play.setOnClickListener { onInteractionListener.playVideo(post.urlVideo)
+            play.setOnClickListener {
+                onInteractionListener.playVideo(post.urlVideo)
             }
             preview.setOnClickListener {
                 onInteractionListener.playVideo(post.urlVideo)

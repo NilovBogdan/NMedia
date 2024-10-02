@@ -12,7 +12,7 @@
         android:id="@+id/videoGroup"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:constraint_referenced_ids="preview,play" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -25,10 +25,10 @@
         app:constraint_referenced_ids="content"
         />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/preview"
-        android:layout_width="wrap_content"
-        android:layout_height="168dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/indent"
         android:layout_marginTop="@dimen/indent"
         android:layout_marginEnd="@dimen/indent"
@@ -36,8 +36,12 @@
         app:layout_constraintBottom_toTopOf="@id/barrierBottom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/content"
-        app:srcCompat="@drawable/maxresdefault" />
-    <ImageView
+        android:background="@android:color/transparent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src ="@drawable/preview" />
+
+    <ImageButton
         android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +50,8 @@
         app:layout_constraintEnd_toEndOf="@id/preview"
         app:layout_constraintBottom_toBottomOf="@id/preview"
         app:layout_constraintStart_toStartOf="@id/preview"
-        app:srcCompat = "@drawable/ic_play_24"/>
+        android:background="@android:color/transparent"
+        android:src = "@drawable/ic_play_24"/>
 
     <ImageView
         android:id="@+id/avatar"
