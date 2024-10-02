@@ -39,7 +39,7 @@
         android:background="@android:color/transparent"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
-        android:src ="@drawable/hqdefault" />
+        android:src ="@drawable/maxresdefault" />
 
     <ImageButton
         android:id="@+id/play"
