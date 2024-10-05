@@ -26,6 +26,5 @@ class NewAndChangePostActivity : AppCompatActivity() {
             }
             finish()
         }
-
     }
 }

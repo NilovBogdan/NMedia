@@ -18,15 +18,31 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val viewModel: PostViewModel by viewModels()
-        val newAndChangePostLauncher =
+
+        val newPostLauncher =
             registerForActivityResult(NewAndChangePostResultContract()) { result ->
                 result ?: return@registerForActivityResult
                 viewModel.applyChangesAndSave(result)
             }
+        val editPost = viewModel.edited.value
+        val changePostLauncher =
+            registerForActivityResult(NewAndChangePostResultContract()) { result ->
+                result ?: editPost?.let {
+                    viewModel.edit(it)
+                    return@registerForActivityResult
+                }
+                if (result != null) {
+                    viewModel.applyChangesAndSave(result)
+                    println("сделали")
+                }
+
+            }
+
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
-                newAndChangePostLauncher.launch(post.content)
+                changePostLauncher.launch(post.content)
                 viewModel.edit(post)
+
             }
 
             override fun onRemove(post: Post) {
@@ -70,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.fab.setOnClickListener {
-            newAndChangePostLauncher.launch("")
+            newPostLauncher.launch("")
         }
 
 
