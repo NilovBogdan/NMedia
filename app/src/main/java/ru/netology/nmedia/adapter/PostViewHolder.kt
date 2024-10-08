@@ -39,6 +39,10 @@ class PostViewHolder(
             reposts.setOnClickListener {
                 onInteractionListener.onShare(post)
             }
+            content.setOnClickListener{
+                onInteractionListener.details(post)
+            }
+
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.menu_post)
