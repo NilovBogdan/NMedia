@@ -1,6 +1,4 @@
 package ru.netology.nmedia.activity
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
 import ru.netology.nmedia.util.StringArg
+import ru.netology.nmedia.util.focusAndShowKeyboard
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class NewAndChangePostFragment : Fragment() {
@@ -20,17 +19,30 @@ class NewAndChangePostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentNewPostBinding.inflate(inflater, container, false)
-        arguments?.textArg?.let {
-            binding.edit.setText(it)
+        arguments?.textArg.let {
+            if (it == null){
+                viewModel.cancelEdit()
+            }else{
+                binding.edit.apply {
+                    setText(it)
+                    requestFocus()
+                    focusAndShowKeyboard()
+                }
+            }
+
         }
+
         binding.ok.setOnClickListener {
             val text = binding.edit.text.toString()
-            if (text.isNotBlank()){
+            if (text.isNotBlank()) {
                 viewModel.applyChangesAndSave(text)
             }
             findNavController().navigateUp()
-
         }
+
+
+
+
         return binding.root
     }
     companion object{

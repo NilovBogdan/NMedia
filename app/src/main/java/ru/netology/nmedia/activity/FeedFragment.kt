@@ -1,5 +1,6 @@
 package ru.netology.nmedia.activity
 
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,13 +10,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.gson.Gson
 import ru.netology.nmedia.OnInteractionListener
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.DetailsFragment.Companion.longArg
 import ru.netology.nmedia.activity.NewAndChangePostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.PostsAdapter
-import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
@@ -31,11 +30,16 @@ class FeedFragment : Fragment() {
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
-                findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment, Bundle().apply { textArg = post.content })
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_newAndChangePostFragment,
+                    Bundle().apply { textArg = post.content })
+
             }
 
             override fun details(post: Post) {
-                findNavController().navigate(R.id.action_feedFragment_to_detailsFragment, Bundle().apply { longArg = post.id })
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_detailsFragment,
+                    Bundle().apply { longArg = post.id })
             }
 
             override fun onRemove(post: Post) {
