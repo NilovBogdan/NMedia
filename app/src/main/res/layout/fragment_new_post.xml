@@ -10,9 +10,11 @@
         android:id="@+id/edit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:autofillHints="no"
         android:gravity="start|top"
         android:inputType="textMultiLine"
         android:background="@android:color/transparent"
+        android:hint="@string/post_text"
         />
 
     <com.google.android.material.bottomappbar.BottomAppBar

@@ -43,4 +43,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
         edited.value = post
     }
+    fun details(post: Post){
+        edited.value = post
+    }
 }
