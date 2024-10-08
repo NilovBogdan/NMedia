@@ -24,16 +24,12 @@ class MainActivity : AppCompatActivity() {
                 result ?: return@registerForActivityResult
                 viewModel.applyChangesAndSave(result)
             }
-        val editPost = viewModel.edited.value
         val changePostLauncher =
             registerForActivityResult(NewAndChangePostResultContract()) { result ->
-                result ?: editPost?.let {
-                    viewModel.edit(it)
-                    return@registerForActivityResult
-                }
                 if (result != null) {
                     viewModel.applyChangesAndSave(result)
-                    println("сделали")
+                }else{
+                    viewModel.cancelEdit()
                 }
 
             }
