@@ -3,47 +3,32 @@ package ru.netology.nmedia.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.OnInteractionListener
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.NewAndChangePostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.PostsAdapter
-import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.viewmodel.PostViewModel
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val viewModel: PostViewModel by viewModels()
-
-        val newPostLauncher =
-            registerForActivityResult(NewAndChangePostResultContract()) { result ->
-                result ?: return@registerForActivityResult
-                viewModel.applyChangesAndSave(result)
-            }
-        val editPost = viewModel.edited.value
-        val changePostLauncher =
-            registerForActivityResult(NewAndChangePostResultContract()) { result ->
-                result ?: editPost?.let {
-                    viewModel.edit(it)
-                    return@registerForActivityResult
-                }
-                if (result != null) {
-                    viewModel.applyChangesAndSave(result)
-                    println("сделали")
-                }
-
-            }
-
+class FeedFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = FragmentFeedBinding.inflate(inflater, container, false)
+        val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
-                changePostLauncher.launch(post.content)
-                println("hello")
                 viewModel.edit(post)
-
+                findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment, Bundle().apply { textArg = post.content })
             }
 
             override fun onRemove(post: Post) {
@@ -73,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.list.adapter = adapter
-        viewModel.data.observe(this) { posts ->
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
             val newPost = posts.size > adapter.currentList.size && adapter.currentList.isNotEmpty()
             adapter.submitList(posts) {
                 if (newPost) {
@@ -81,15 +66,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        viewModel.edited.observe(this) { post ->
+        viewModel.edited.observe(viewLifecycleOwner) { post ->
             if (post.id == 0L) {
                 return@observe
             }
         }
         binding.fab.setOnClickListener {
-            newPostLauncher.launch("")
+            findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment)
         }
 
-
+        return binding.root
     }
+
 }
