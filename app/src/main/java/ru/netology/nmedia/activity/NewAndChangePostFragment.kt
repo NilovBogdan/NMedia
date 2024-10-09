@@ -1,8 +1,10 @@
 package ru.netology.nmedia.activity
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,16 +20,17 @@ class NewAndChangePostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val prefs = context?.getSharedPreferences("draft", Context.MODE_PRIVATE)
         val binding = FragmentNewPostBinding.inflate(inflater, container, false)
         arguments?.textArg.let {
             if (it == null){
                 viewModel.cancelEdit()
-            }else{
-                binding.edit.apply {
-                    setText(it)
-                    requestFocus()
-                    focusAndShowKeyboard()
-                }
+            }
+            binding.edit.apply {
+                setText(it)
+                requestFocus()
+                focusAndShowKeyboard()
+
             }
 
         }
@@ -37,11 +40,18 @@ class NewAndChangePostFragment : Fragment() {
             if (text.isNotBlank()) {
                 viewModel.applyChangesAndSave(text)
             }
+
             findNavController().navigateUp()
         }
 
 
-
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            with(prefs?.edit()){
+                this?.putString("draft", binding.edit.text.toString())
+                this?.apply()
+            }
+            findNavController().navigateUp()
+        }
 
         return binding.root
     }

@@ -1,6 +1,7 @@
 package ru.netology.nmedia.activity
 
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -27,6 +28,7 @@ class FeedFragment : Fragment() {
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
         val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
+        val prefs = context?.getSharedPreferences("draft", Context.MODE_PRIVATE)
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -83,10 +85,15 @@ class FeedFragment : Fragment() {
             }
         }
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment)
+            findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment, Bundle().apply { textArg = prefs?.getString("draft", null) })
+            with(prefs?.edit()){
+                this?.putString("draft", "")
+                this?.apply()
+            }
         }
 
         return binding.root
+
     }
 
 }

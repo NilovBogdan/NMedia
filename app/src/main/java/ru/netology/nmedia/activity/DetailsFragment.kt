@@ -35,8 +35,8 @@ class DetailsFragment : Fragment() {
                 reposts.text = post.repost
                 countViews.text = post.views
                 like.isChecked = post.likedByMe
-                like.text = post.like
-                if (post.urlVideo.isNotBlank()) {
+                like.text = post.likes
+                if (post.urlVideo != "null") {
                     videoGroup.visibility = View.VISIBLE
                 } else {
                     videoGroup.visibility = View.INVISIBLE
