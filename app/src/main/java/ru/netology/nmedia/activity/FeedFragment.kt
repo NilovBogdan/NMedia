@@ -28,7 +28,6 @@ class FeedFragment : Fragment() {
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
         val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
-        val prefs = context?.getSharedPreferences("draft", Context.MODE_PRIVATE)
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -67,6 +66,11 @@ class FeedFragment : Fragment() {
             override fun playVideo(url: String) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }
+
+            override fun logicLikeAndRepost(count: Double): String {
+                return viewModel.logicLikeAndRepost(count)
+
+            }
         })
 
 
@@ -85,11 +89,8 @@ class FeedFragment : Fragment() {
             }
         }
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment, Bundle().apply { textArg = prefs?.getString("draft", null) })
-            with(prefs?.edit()){
-                this?.putString("draft", "")
-                this?.apply()
-            }
+            findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment)
+
         }
 
         return binding.root

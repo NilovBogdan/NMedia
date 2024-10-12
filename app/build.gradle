@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id 'org.jetbrains.kotlin.kapt'
 }
 
 android {
@@ -47,5 +48,7 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
     implementation libs.gson
     implementation libs.google.gson
+    implementation libs.androidx.room.runtime
+    kapt "androidx.room:room-compiler:2.6.1"
 
 }

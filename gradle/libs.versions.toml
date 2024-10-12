@@ -14,11 +14,15 @@ constraintlayout = "2.1.4"
 recyclerview = "1.3.2"
 navigationFragmentKtx = "2.8.2"
 navigationUiKtx = "2.8.2"
+roomRuntime = "2.6.1"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+androidx-room-compiler = { module = "androidx.room:room-compiler" }
+androidx-room-copiler = { module = "androidx.room:room-copiler" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 google-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 gson = { module = "com.google.code.gson:gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

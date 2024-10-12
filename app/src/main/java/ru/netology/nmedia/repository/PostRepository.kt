@@ -10,4 +10,5 @@ interface PostRepository {
     fun removeById(id: Long)
     fun save(post: Post)
     fun playVideo(url: String)
+    fun logicLikeAndRepost(count: Double): String
 }

@@ -32,10 +32,10 @@ class DetailsFragment : Fragment() {
                 author.text = post.author
                 content.text = post.content
                 published.text = post.published
-                reposts.text = post.repost
+                reposts.text = viewModel.logicLikeAndRepost(post.repost.toDouble())
                 countViews.text = post.views
                 like.isChecked = post.likedByMe
-                like.text = post.likes
+                like.text = viewModel.logicLikeAndRepost(post.likes.toDouble()).toString()
                 if (post.urlVideo != "null") {
                     videoGroup.visibility = View.VISIBLE
                 } else {

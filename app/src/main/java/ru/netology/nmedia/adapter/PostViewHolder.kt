@@ -17,10 +17,10 @@ class PostViewHolder(
             author.text = post.author
             content.text = post.content
             published.text = post.published
-            reposts.text = post.repost
+            reposts.text = onInteractionListener.logicLikeAndRepost(post.repost.toDouble())
             countViews.text = post.views
             like.isChecked = post.likedByMe
-            like.text = post.likes
+            like.text = onInteractionListener.logicLikeAndRepost(post.likes.toDouble())
             if (post.urlVideo != ("null")){
                 videoGroup.visibility = View.VISIBLE
             }else{

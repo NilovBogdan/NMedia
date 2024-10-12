@@ -22,15 +22,12 @@ class NewAndChangePostFragment : Fragment() {
     ): View {
         val prefs = context?.getSharedPreferences("draft", Context.MODE_PRIVATE)
         val binding = FragmentNewPostBinding.inflate(inflater, container, false)
-        arguments?.textArg.let {
-            if (it == null){
-                viewModel.cancelEdit()
-            }
+        binding.edit.setText(prefs?.getString("draft",""))
+        arguments?.textArg?.let {
             binding.edit.apply {
                 setText(it)
                 requestFocus()
                 focusAndShowKeyboard()
-
             }
 
         }
@@ -40,16 +37,22 @@ class NewAndChangePostFragment : Fragment() {
             if (text.isNotBlank()) {
                 viewModel.applyChangesAndSave(text)
             }
-
+            with(prefs?.edit()){
+                this?.putString("draft", "")
+                this?.apply()
+            }
             findNavController().navigateUp()
         }
 
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            with(prefs?.edit()){
-                this?.putString("draft", binding.edit.text.toString())
-                this?.apply()
-            }
+            if (arguments?.textArg == null){
+                with(prefs?.edit()){
+                    this?.putString("draft", binding.edit.text.toString())
+                    this?.apply()
+                }
+            }else viewModel.cancelEdit()
+
             findNavController().navigateUp()
         }
 

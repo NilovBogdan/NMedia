@@ -5,28 +5,27 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
+import ru.netology.nmedia.repository.PostRepositoryRoomImpl
 
 private val empty = Post(
     id = 0L,
     "",
     "",
     "",
-    "",
-    "",
+    0,
+    0,
     "",
     false,
-    0,
-    0,
-    "null"
+    "null",
 )
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao)
+    private val repository: PostRepository = PostRepositoryRoomImpl(AppDb.getInstance(application).postDao)
     val data = repository.getAll()
     fun likeById(id: Long) = repository.likeById(id)
     fun shareById(id: Long) = repository.shareById(id)
     fun removeById(id: Long) = repository.removeById(id)
     fun playVideo(url: String) = repository.playVideo(url)
+    fun logicLikeAndRepost(count: Double): String = repository.logicLikeAndRepost(count)
     val edited = MutableLiveData(empty)
 
     fun applyChangesAndSave(newText: String){
