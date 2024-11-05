@@ -1,6 +1,7 @@
 package ru.netology.nmedia.activity
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -34,6 +35,9 @@ class AppActivity : AppCompatActivity() {
             findNavController(R.id.navHost).navigate(R.id.action_feedFragment_to_newAndChangePostFragment,
                 Bundle().apply { textArg = text })
 
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 0)
         }
     }
 }

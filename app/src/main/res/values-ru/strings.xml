@@ -21,6 +21,10 @@
     <string name="save">Сохранить</string>
     <string name="description_play_video">Включить видео</string>
     <string name="description_preview">Обложка видео</string>
+    <string name="channel_name">Уведомление</string>
+    <string name="notification_user_like">%1$s поставил лайк посту %2$s</string>
+    <string name="error_notification_title">Неизвестное уведомление</string>
+    <string name="notification_user_new_posted">%1$s опубликовал новый пост</string>
 
 
 </resources>
