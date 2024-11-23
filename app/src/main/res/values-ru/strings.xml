@@ -25,6 +25,9 @@
     <string name="notification_user_like">%1$s поставил лайк посту %2$s</string>
     <string name="error_notification_title">Неизвестное уведомление</string>
     <string name="notification_user_new_posted">%1$s опубликовал новый пост</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="retry">Повторить</string>
+    <string name="there_is_not_posts">Нет постов</string>
 
 
 </resources>

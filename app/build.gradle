@@ -22,6 +22,11 @@ buildFeatures.viewBinding = true
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders.usesCleartextTraffic = false
+
+        }
+        debug {
+            manifestPlaceholders.usesCleartextTraffic = true
         }
     }
     compileOptions {
@@ -53,4 +58,5 @@ dependencies {
     kapt "androidx.room:room-compiler:2.6.1"
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation "com.squareup.okhttp3:okhttp:4.12.0"
 }

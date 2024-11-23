@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -74,13 +75,16 @@ class FeedFragment : Fragment() {
 
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
-            val newPost = posts.size > adapter.currentList.size && adapter.currentList.isNotEmpty()
-            adapter.submitList(posts) {
+        viewModel.data.observe(viewLifecycleOwner) { state ->
+            val newPost = state.posts.size > adapter.currentList.size && adapter.currentList.isNotEmpty()
+            adapter.submitList(state.posts) {
                 if (newPost) {
                     binding.list.smoothScrollToPosition(0)
                 }
             }
+            binding.errorGroup.isVisible = state.error
+            binding.empty.isVisible = state.empty
+            binding.progress.isVisible = state.loading
         }
         viewModel.edited.observe(viewLifecycleOwner) { post ->
             if (post.id == 0L) {

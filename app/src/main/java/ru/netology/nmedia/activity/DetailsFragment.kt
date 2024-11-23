@@ -27,8 +27,8 @@ class DetailsFragment : Fragment() {
         val binding = FragmentDetailsBinding.inflate(inflater, container, false)
         val postId = arguments?.longArg ?: -1
         CardPostBinding.inflate(inflater, binding.container, true).apply {
-            viewModel.data.observe(viewLifecycleOwner) { posts ->
-                val post = posts.find { it.id == postId } ?: return@observe
+            viewModel.data.observe(viewLifecycleOwner) { state ->
+                val post = state.posts.find { it.id == postId } ?: return@observe
                 author.text = post.author
                 content.text = post.content
                 published.text = post.published
@@ -85,6 +85,7 @@ class DetailsFragment : Fragment() {
                         }
                     }.show()
                 }
+
 
             }
 

@@ -1,24 +1,73 @@
 package ru.netology.nmedia.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
-import ru.netology.nmedia.dao.PostDao
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.entity.PostEntity
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.util.concurrent.TimeUnit
 
-class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
-    override fun getAll(): LiveData<List<Post>> = dao.getAll().map {
-        it.map { it.toDto() }
+class PostRepositoryRoomImpl() : PostRepository {
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .build()
+
+    private val gson = Gson()
+    private val typeToken = object : TypeToken<List<Post>>() {}
+    private companion object{
+        const val BASE_URL = "http://10.0.2.2:9999/"
+        val jsonType = "application/json".toMediaType()
     }
-    override fun likeById(id: Long) = dao.likeById(id)
+    override fun getAll(): List<Post> {
+        val request: Request = Request.Builder()
+            .url("${BASE_URL}/api/slow/posts")
+            .build()
 
-    override fun shareById(id: Long) = dao.shareById(id)
+        val call = client.newCall(request)
 
-    override fun removeById(id: Long) = dao.removeById(id)
+        val response = call.execute()
 
-    override fun save(post: Post) = dao.save(PostEntity.fromDto(post))
+        val body = response.body ?: error("Body is null")
+
+        return gson.fromJson(body.string(), typeToken)
+
+    }
+
+
+
+    override fun likeById(id: Long) = TODO()
+
+    override fun shareById(id: Long) = TODO()
+
+    override fun removeById(id: Long) {
+        val request = Request.Builder()
+            .url("${BASE_URL}api/slow/post/${id}")
+            .delete()
+            .build()
+
+        val call = client.newCall(request)
+
+        call.execute()
+    }
+
+    override fun save(post: Post): Post{
+        val request = Request.Builder()
+            .url("${BASE_URL}api/slow/post")
+            .post(gson.toJson(post).toRequestBody(jsonType))
+            .build()
+
+        val call = client.newCall(request)
+
+        val response = call.execute()
+
+        val body = response.body ?: error("Body is null")
+
+        return gson.fromJson(body.string(), Post::class.java)
+    }
 
     override fun playVideo(url: String) {
     }
