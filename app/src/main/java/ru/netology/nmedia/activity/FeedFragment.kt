@@ -85,6 +85,13 @@ class FeedFragment : Fragment() {
             binding.errorGroup.isVisible = state.error
             binding.empty.isVisible = state.empty
             binding.progress.isVisible = state.loading
+            binding.retry.setOnClickListener{
+                viewModel.load()
+            }
+            binding.swipe.setOnRefreshListener {
+                viewModel.load()
+                binding.swipe.isRefreshing = false
+            }
         }
         viewModel.edited.observe(viewLifecycleOwner) { post ->
             if (post.id == 0L) {

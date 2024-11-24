@@ -24,14 +24,14 @@ class PostRepositoryRoomImpl() : PostRepository {
     }
     override fun getAll(): List<Post> {
         val request: Request = Request.Builder()
-            .url("${BASE_URL}/api/slow/posts")
+            .url("${BASE_URL}api/slow/posts")
             .build()
 
         val call = client.newCall(request)
 
         val response = call.execute()
 
-        val body = response.body ?: error("Body is null")
+        val body = response.body ?: throw RuntimeException("body is null")
 
         return gson.fromJson(body.string(), typeToken)
 
@@ -39,13 +39,32 @@ class PostRepositoryRoomImpl() : PostRepository {
 
 
 
-    override fun likeById(id: Long) = TODO()
+    override fun likeById(id: Long): Post{
+        val request = Request.Builder()
+            .url("${BASE_URL}api/slow/posts/${id}/likes")
+            .post(gson.toJson(id).toRequestBody(jsonType))
+            .build()
+        val call = client.newCall(request)
+        val response = call.execute()
+        val body = response.body ?: throw RuntimeException("body is null")
+        return gson.fromJson(body.string(), Post::class.java)
+    }
+    override fun unLikeById(id: Long): Post{
+        val request = Request.Builder()
+            .url("${BASE_URL}api/slow/posts/${id}/likes")
+            .delete(gson.toJson(id).toRequestBody(jsonType))
+            .build()
+        val call = client.newCall(request)
+        val response = call.execute()
+        val body = response.body ?: throw RuntimeException("body is null")
+        return gson.fromJson(body.string(), Post::class.java)
+    }
 
     override fun shareById(id: Long) = TODO()
 
     override fun removeById(id: Long) {
         val request = Request.Builder()
-            .url("${BASE_URL}api/slow/post/${id}")
+            .url("${BASE_URL}api/slow/posts/${id}")
             .delete()
             .build()
 
@@ -56,7 +75,7 @@ class PostRepositoryRoomImpl() : PostRepository {
 
     override fun save(post: Post): Post{
         val request = Request.Builder()
-            .url("${BASE_URL}api/slow/post")
+            .url("${BASE_URL}api/slow/posts")
             .post(gson.toJson(post).toRequestBody(jsonType))
             .build()
 

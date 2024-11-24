@@ -41,7 +41,11 @@ class NewAndChangePostFragment : Fragment() {
                 this?.putString("draft", "")
                 this?.apply()
             }
+
+        }
+        viewModel.postCreated.observe(viewLifecycleOwner){
             findNavController().navigateUp()
+            viewModel.load()
         }
 
 

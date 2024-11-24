@@ -59,4 +59,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

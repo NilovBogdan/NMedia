@@ -7,6 +7,7 @@ import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositoryRoomImpl
+import ru.netology.nmedia.util.SingleLiveEvent
 import kotlin.concurrent.thread
 
 private val empty = Post(
@@ -24,9 +25,48 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryRoomImpl()
     private val _data = MutableLiveData(FeedState())
     val data:LiveData<FeedState> = _data
-    fun likeById(id: Long) = repository.likeById(id)
+    private val _postCreated = SingleLiveEvent<Unit>()
+    val postCreated: LiveData<Unit> = _postCreated
+    fun likeById(id: Long) {
+        val currentState = _data.value ?: return
+        thread {
+            try {
+                _data.postValue(
+                    currentState.copy(
+                        posts = currentState.posts.map {
+                            when {
+                                it.id == id && !it.likedByMe -> repository.likeById(id)
+                                it.id == id && it.likedByMe -> repository.unLikeById(id)
+                                else -> return@thread
+                            }
+
+                        }
+
+                    )
+                )
+            }catch (e: Exception){
+                _data.postValue(currentState)
+            }
+
+        }
+    }
     fun shareById(id: Long) = repository.shareById(id)
-    fun removeById(id: Long) = repository.removeById(id)
+    fun removeById(id: Long) {
+        val currentState = _data.value ?: return
+        thread {
+            _data.postValue(
+                currentState.copy(
+                posts = currentState.posts.filter { it.id != id }
+            )
+            )
+            try {
+                repository.removeById(id)
+            }catch (e: Exception){
+                _data.postValue(currentState)
+            }
+
+        }
+    }
     fun playVideo(url: String) = repository.playVideo(url)
     fun logicLikeAndRepost(count: Double): String = repository.logicLikeAndRepost(count)
     val edited = MutableLiveData(empty)
@@ -37,12 +77,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun applyChangesAndSave(newText: String){
         edited.value?.let {
-            val text = newText.trim()
-            if (text != it.content){
-                repository.save(it.copy(content = text))
-                edited.value = empty
+            thread {
+                val text = newText.trim()
+                if (text != it.content) {
+                    repository.save(it.copy(content = text))
+                    _postCreated.postValue(Unit)
+                }
+                edited.postValue(empty)
             }
-
         }
     }
     fun edit(post: Post){
@@ -66,4 +108,5 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
         }
     }
+
 }
