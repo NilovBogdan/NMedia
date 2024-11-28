@@ -21,7 +21,7 @@ class PostViewHolder(
             countViews.text = post.views
             like.isChecked = post.likedByMe
             like.text = onInteractionListener.logicLikeAndRepost(post.likes.toDouble())
-            if (post.urlVideo != ("null")){
+            if (post.urlVideo?.isNotBlank() == true){
                 videoGroup.visibility = View.VISIBLE
             }else{
                 videoGroup.visibility = View.INVISIBLE
