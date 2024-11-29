@@ -37,14 +37,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     id,
                     object : PostCallBack<Post> {
                         override fun onSuccess(result: Post) {
-                            _data.postValue(currentState.copy(
-                                posts = currentState.posts.map {
-                                    when {
-                                        it.id == id && !it.likedByMe -> result
-                                        else -> it
+                            _data.postValue(_data.value?.posts?.let {
+                                _data.value?.copy(
+                                    posts = it.map {state ->
+                                        when {
+                                            state.id == id && !state.likedByMe -> result
+                                            else -> state
+                                        }
                                     }
-                                }
-                            ))
+                                )
+                            })
                         }
 
                         override fun onError(error: Exception) {
@@ -56,16 +58,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 post.id == id && post.likedByMe -> repository.unLikeById(id,
                     object : PostCallBack<Post> {
                         override fun onSuccess(result: Post) {
-                            _data.postValue(
-                                currentState.copy(
-                                    posts = currentState.posts.map {
+                            _data.postValue(_data.value?.posts?.let {
+                                _data.value?.copy(
+                                    posts = it.map {state ->
                                         when {
-                                            it.id == id && it.likedByMe -> result
-                                            else -> it
+                                            state.id == id && state.likedByMe -> result
+                                            else -> state
                                         }
                                     }
                                 )
-                            )
+                            })
                         }
 
                         override fun onError(error: Exception) {
