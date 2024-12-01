@@ -21,9 +21,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/indent"
         app:barrierDirection="bottom"
-        app:layout_constraintTop_toBottomOf="@id/content"
         app:constraint_referenced_ids="content"
-        />
+        app:layout_constraintTop_toBottomOf="@id/content" />
+
+    <ImageView
+        android:id="@+id/attachment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/indent"
+        android:layout_marginTop="@dimen/indent"
+        android:layout_marginEnd="@dimen/indent"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/attachment"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/barrierBottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/content" />
 
     <ImageButton
         android:id="@+id/preview"
@@ -32,26 +47,26 @@
         android:layout_marginStart="@dimen/indent"
         android:layout_marginTop="@dimen/indent"
         android:layout_marginEnd="@dimen/indent"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/description_preview"
+        android:scaleType="centerInside"
+        android:src="@drawable/hqdefault"
         app:layout_constraintBottom_toTopOf="@id/barrierBottom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/content"
-        android:background="@android:color/transparent"
-        android:adjustViewBounds="true"
-        android:scaleType="centerInside"
-        android:src ="@drawable/hqdefault" />
+        app:layout_constraintTop_toBottomOf="@id/content" />
 
     <ImageButton
         android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/description_play_video"
-        app:layout_constraintTop_toTopOf="@id/preview"
-        app:layout_constraintEnd_toEndOf="@id/preview"
-        app:layout_constraintBottom_toBottomOf="@id/preview"
-        app:layout_constraintStart_toStartOf="@id/preview"
         android:background="@android:color/transparent"
-        android:src = "@drawable/ic_play_24"/>
+        android:contentDescription="@string/description_play_video"
+        android:src="@drawable/ic_play_24"
+        app:layout_constraintBottom_toBottomOf="@id/preview"
+        app:layout_constraintEnd_toEndOf="@id/preview"
+        app:layout_constraintStart_toStartOf="@id/preview"
+        app:layout_constraintTop_toTopOf="@id/preview" />
 
     <ImageView
         android:id="@+id/avatar"
@@ -105,14 +120,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/menu"
+        style="@style/Widget.AppThem.MenuButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:contentDescription="@string/description_post_menu"
         app:icon="@drawable/ic_baseline_more_vert_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Widget.AppThem.MenuButton"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/like"
@@ -131,18 +146,17 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/reposts"
+        style="@style/Widget.AppThem.ShareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/description_reposts"
-        app:layout_constraintStart_toEndOf="@id/like"
-        app:layout_constraintTop_toBottomOf="@id/barrierBottom"
-        app:icon="@drawable/ic_baseline_share_24"
-        style="@style/Widget.AppThem.ShareButton"
         android:textColor="@color/gray"
-        />
+        app:icon="@drawable/ic_baseline_share_24"
+        app:layout_constraintStart_toEndOf="@id/like"
+        app:layout_constraintTop_toBottomOf="@id/barrierBottom" />
 
     <TextView
         android:id="@+id/countViews"

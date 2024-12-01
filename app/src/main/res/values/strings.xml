@@ -27,6 +27,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="retry">Retry</string>
     <string name="there_is_not_posts">There is not posts</string>
+    <string name="attachment">Attachment</string>
 
 
 </resources>
