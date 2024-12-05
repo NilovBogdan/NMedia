@@ -5,17 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.NewAndChangePostFragment">
-
     <EditText
         android:id="@+id/edit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:autofillHints="no"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
         android:background="@android:color/transparent"
+        android:gravity="start|top"
         android:hint="@string/post_text"
-        />
+        android:inputType="textMultiLine"
+        app:layout_anchorGravity="center" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
@@ -34,5 +33,7 @@
         app:layout_anchor="@id/bottomAppBar"
         style="@style/Widget.AppThem.AddButton"
         />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,7 +25,7 @@ class FeedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
         val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
@@ -76,7 +77,8 @@ class FeedFragment : Fragment() {
 
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
-            val newPost = state.posts.size > adapter.currentList.size && adapter.currentList.isNotEmpty()
+            val newPost =
+                state.posts.size > adapter.currentList.size && adapter.currentList.isNotEmpty()
             adapter.submitList(state.posts) {
                 if (newPost) {
                     binding.list.smoothScrollToPosition(0)
@@ -85,13 +87,17 @@ class FeedFragment : Fragment() {
             binding.errorGroup.isVisible = state.error
             binding.empty.isVisible = state.empty
             binding.progress.isVisible = state.loading
-            binding.retry.setOnClickListener{
+            binding.retry.setOnClickListener {
                 viewModel.load()
             }
             binding.swipe.setOnRefreshListener {
                 viewModel.load()
                 binding.swipe.isRefreshing = false
             }
+        }
+
+        viewModel.singleError.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), R.string.like_try_again, Toast.LENGTH_SHORT).show()
         }
         viewModel.edited.observe(viewLifecycleOwner) { post ->
             if (post.id == 0L) {

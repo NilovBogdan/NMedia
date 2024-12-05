@@ -28,6 +28,8 @@
     <string name="retry">Retry</string>
     <string name="there_is_not_posts">There is not posts</string>
     <string name="attachment">Attachment</string>
+    <string name="try_again">Try again</string>
+    <string name="close">Close</string>
 
 
 </resources>

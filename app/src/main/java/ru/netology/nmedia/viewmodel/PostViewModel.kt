@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.repository.PostCallBack
 import ru.netology.nmedia.repository.PostRepository
@@ -29,6 +30,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _data = MutableLiveData(FeedState())
     val data: LiveData<FeedState> = _data
     private val _postCreated = SingleLiveEvent<Unit>()
+    private val _singleError = SingleLiveEvent<Unit>()
+    val singleError: LiveData<Unit>
+        get() = _singleError
     val postCreated: LiveData<Unit> = _postCreated
     fun likeById(id: Long) {
         val currentState = _data.value ?: return
@@ -40,7 +44,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                         override fun onSuccess(result: Post) {
                             _data.postValue(_data.value?.posts?.let {
                                 _data.value?.copy(
-                                    posts = it.map {state ->
+                                    posts = it.map { state ->
                                         when {
                                             state.id == id && !state.likedByMe -> result
                                             else -> state
@@ -50,8 +54,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                             })
                         }
 
-                        override fun onError(error: Exception) {
-                            _data.postValue(currentState)
+                        override fun onError(error: Throwable) {
+                            _singleError.postValue(Unit)
+                            _data.value = currentState
                         }
 
                     })
@@ -61,7 +66,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                         override fun onSuccess(result: Post) {
                             _data.postValue(_data.value?.posts?.let {
                                 _data.value?.copy(
-                                    posts = it.map {state ->
+                                    posts = it.map { state ->
                                         when {
                                             state.id == id && state.likedByMe -> result
                                             else -> state
@@ -71,8 +76,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                             })
                         }
 
-                        override fun onError(error: Exception) {
-                            _data.postValue(currentState)
+                        override fun onError(error: Throwable) {
+                            _singleError.postValue(Unit)
+                            _data.value = currentState
                         }
                     }
                 )
@@ -93,7 +99,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 )
             }
 
-            override fun onError(error: Exception) {
+            override fun onError(error: Throwable) {
+                _singleError.postValue(Unit)
                 _data.postValue(currentState)
             }
 
@@ -117,7 +124,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                         _postCreated.postValue(Unit)
                     }
 
-                    override fun onError(error: Exception) {
+                    override fun onError(error: Throwable) {
+                        _singleError.postValue(Unit)
                         _data.postValue(FeedState(error = true))
                     }
 
@@ -140,15 +148,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun load() {
-        _data.postValue(FeedState(loading = true))
+        _data.value = (FeedState(loading = true))
         repository.getAll(
             object : PostCallBack<List<Post>> {
                 override fun onSuccess(result: List<Post>) {
-                    _data.postValue(FeedState(posts = result, empty = result.isEmpty()))
+                    _data.value = (FeedState(posts = result, empty = result.isEmpty()))
                 }
 
-                override fun onError(error: Exception) {
-                    _data.postValue(FeedState(error = true))
+                override fun onError(error: Throwable) {
+                    _data.value = (FeedState(error = true))
                 }
             })
 
