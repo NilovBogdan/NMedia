@@ -29,6 +29,7 @@
     <string name="retry">Повторить</string>
     <string name="there_is_not_posts">Нет постов</string>
     <string name="attachment">Вложение</string>
+    <string name="like_try_again">Что то пошло не так, попробуй снова</string>
     <string name="try_again">Попробовать снова</string>
     <string name="close">Закрыть</string>
 
