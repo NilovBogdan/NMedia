@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.OnInteractionListener
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.DetailsFragment.Companion.longArg
@@ -19,6 +20,7 @@ import ru.netology.nmedia.activity.NewAndChangePostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.viewmodel.FeedError
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class FeedFragment : Fragment() {
@@ -48,23 +50,23 @@ class FeedFragment : Fragment() {
                 viewModel.removeById(post.id)
             }
 
-            override fun onShare(post: Post) {
-                val intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, post.content)
-                    type = "text/plain"
-                }
-                val shareIntent =
-                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
-                startActivity(shareIntent)
-                viewModel.shareById(post.id)
-            }
+//            override fun onShare(post: Post) {
+//                val intent = Intent().apply {
+//                    action = Intent.ACTION_SEND
+//                    putExtra(Intent.EXTRA_TEXT, post.content)
+//                    type = "text/plain"
+//                }
+//                val shareIntent =
+//                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
+//                startActivity(shareIntent)
+//                viewModel.shareById(post.id)
+//            }
 
             override fun onLike(post: Post) {
                 viewModel.likeById(post.id)
             }
 
-            override fun playVideo(url: String) {
+            override fun playVideo(url: String?) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }
 
@@ -84,15 +86,24 @@ class FeedFragment : Fragment() {
                     binding.list.smoothScrollToPosition(0)
                 }
             }
-            binding.errorGroup.isVisible = state.error
+//            binding.errorGroup.isVisible = state.error
             binding.empty.isVisible = state.empty
-            binding.progress.isVisible = state.loading
             binding.retry.setOnClickListener {
                 viewModel.load()
             }
             binding.swipe.setOnRefreshListener {
                 viewModel.load()
                 binding.swipe.isRefreshing = false
+            }
+        }
+        viewModel.dataState.observe(viewLifecycleOwner){state ->
+            binding.swipe.isRefreshing = state.loading
+            if (state.error != FeedError.NONE){
+                Snackbar.make(binding.root, "Error: ${state.error}", Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry){
+                        viewModel.load()
+                    }
+                    .show()
             }
         }
 

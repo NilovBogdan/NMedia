@@ -42,12 +42,12 @@ class DetailsFragment : Fragment() {
                     videoGroup.visibility = View.INVISIBLE
                     videoGroup.visibility = View.GONE
                 }
-                play.setOnClickListener {
-                    viewModel.playVideo(post.urlVideo)
-                }
-                preview.setOnClickListener {
-                    viewModel.playVideo(post.urlVideo)
-                }
+//                play.setOnClickListener {
+//                    viewModel.playVideo(post.urlVideo)
+//                }
+//                preview.setOnClickListener {
+//                    viewModel.playVideo(post.urlVideo)
+//                }
                 like.setOnClickListener {
                     viewModel.likeById(post.id)
                 }
@@ -60,7 +60,7 @@ class DetailsFragment : Fragment() {
                     val shareIntent =
                         Intent.createChooser(intent, getString(R.string.chooser_share_post))
                     startActivity(shareIntent)
-                    viewModel.shareById(post.id)
+//                    viewModel.shareById(post.id)
                 }
                 menu.setOnClickListener {
                     PopupMenu(it.context, it).apply {
@@ -68,7 +68,7 @@ class DetailsFragment : Fragment() {
                         setOnMenuItemClickListener { item ->
                             when (item.itemId) {
                                 R.id.remove -> {
-                                    viewModel.removeById(post.id)
+//                                    viewModel.removeById(post.id)
                                     findNavController().navigateUp()
                                     true
                                 }
