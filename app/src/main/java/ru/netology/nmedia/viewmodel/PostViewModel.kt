@@ -4,8 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
@@ -32,19 +36,40 @@ private val empty = Post(
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryRoomImpl(AppDb.getInstance(application).postDao)
-    val data = repository.data.map { FeedModel(posts = it, empty = it.isEmpty()) }
+    private val repository: PostRepository =
+        PostRepositoryRoomImpl(AppDb.getInstance(application).postDao)
+    val data = repository.data
+        .map { FeedModel(posts = it, empty = it.isEmpty()) }
+        .asLiveData(Dispatchers.Default)
+    val newerCount: LiveData<Int> = data.switchMap {
+        val newerPostId = it.posts.firstOrNull()?.id ?: 0L
+        repository.getNewerCount(newerPostId).asLiveData(Dispatchers.Default)
+    }
     private val _postCreated = SingleLiveEvent<Unit>()
     private val _singleError = SingleLiveEvent<Unit>()
     val singleError: LiveData<Unit>
         get() = _singleError
     private val _dataState = MutableLiveData<FeedModelState>()
-           val dataState: LiveData<FeedModelState>
+    val dataState: LiveData<FeedModelState>
         get() = _dataState
     val postCreated: LiveData<Unit> = _postCreated
 
     init {
         load()
+    }
+
+    fun readAll() {
+        viewModelScope.launch {
+            try {
+                repository.readAll()
+            } catch (e: AppError) {
+                when (e) {
+                    is ApiError -> _dataState.value = FeedModelState(error = FeedError.API)
+                    is NetworkError -> _dataState.value = FeedModelState(error = FeedError.NETWORK)
+                    is UnknownError -> _dataState.value = FeedModelState(error = FeedError.UNKNOWN)
+                }
+            }
+        }
     }
 
     fun likeById(id: Long) {
@@ -58,22 +83,27 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                         when (e) {
                             is ApiError -> _dataState.value =
                                 FeedModelState(error = FeedError.API)
+
                             is NetworkError -> _dataState.value =
                                 FeedModelState(error = FeedError.NETWORK)
+
                             is UnknownError -> _dataState.value =
                                 FeedModelState(error = FeedError.UNKNOWN)
                         }
                     }
                 }
+
                 post.id == id && post.likedByMe -> viewModelScope.launch {
                     try {
                         repository.unLikeById(id)
-                    }catch (e: AppError) {
+                    } catch (e: AppError) {
                         when (e) {
                             is ApiError -> _dataState.value =
                                 FeedModelState(error = FeedError.API)
+
                             is NetworkError -> _dataState.value =
                                 FeedModelState(error = FeedError.NETWORK)
+
                             is UnknownError -> _dataState.value =
                                 FeedModelState(error = FeedError.UNKNOWN)
                         }
@@ -83,32 +113,27 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-//    fun shareById(id: Long) = repository.shareById(id)
+    //    fun shareById(id: Long) = repository.shareById(id)
     fun removeById(id: Long) {
-    val currentState = data.value ?: return
-    viewModelScope.launch {
-        try {
-            repository.removeById(id)
-        } catch (e: AppError) {
-            currentState.posts.forEach {
-                if (it.id == id){
+        viewModelScope.launch {
+            try {
+                repository.removeById(id)
+            } catch (e: AppError) {
+                when (e) {
+                    is ApiError -> _dataState.value = FeedModelState(error = FeedError.API)
+                    is NetworkError -> _dataState.value =
+                        FeedModelState(error = FeedError.NETWORK)
+
+                    is UnknownError -> _dataState.value =
+                        FeedModelState(error = FeedError.UNKNOWN)
                 }
-            }
-            when (e) {
-                is ApiError -> _dataState.value = FeedModelState(error = FeedError.API)
-                is NetworkError -> _dataState.value =
-                    FeedModelState(error = FeedError.NETWORK)
-                is UnknownError -> _dataState.value =
-                    FeedModelState(error = FeedError.UNKNOWN)
             }
         }
     }
-}
 
-//    fun playVideo(url: String) = repository.playVideo(url)
+    //    fun playVideo(url: String) = repository.playVideo(url)
     fun logicLikeAndRepost(count: Double): String = repository.logicLikeAndRepost(count)
     val edited = MutableLiveData(empty)
-
 
 
     fun applyChangesAndSave(newText: String) {
@@ -144,12 +169,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: AppError) {
                 when (e) {
                     is ApiError -> _dataState.value = FeedModelState(error = FeedError.API)
-                    is NetworkError -> _dataState.value = FeedModelState(error = FeedError.NETWORK)
-                    is UnknownError -> _dataState.value = FeedModelState(error = FeedError.UNKNOWN)
+                    is NetworkError -> _dataState.value =
+                        FeedModelState(error = FeedError.NETWORK)
+
+                    is UnknownError -> _dataState.value =
+                        FeedModelState(error = FeedError.UNKNOWN)
                 }
             }
 
         }
     }
+
 
 }

@@ -4,6 +4,7 @@ package ru.netology.nmedia.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,14 +97,23 @@ class FeedFragment : Fragment() {
                 binding.swipe.isRefreshing = false
             }
         }
-        viewModel.dataState.observe(viewLifecycleOwner){state ->
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.swipe.isRefreshing = state.loading
-            if (state.error != FeedError.NONE){
+            if (state.error != FeedError.NONE) {
                 Snackbar.make(binding.root, "Error: ${state.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry){
+                    .setAction(R.string.retry) {
                         viewModel.load()
                     }
                     .show()
+            }
+        }
+        viewModel.newerCount.observe(viewLifecycleOwner) {
+            if (it > 0)
+                binding.newEntries.visibility = View.VISIBLE
+            binding.newEntries.setOnClickListener {
+                viewModel.readAll()
+                binding.newEntries.visibility = View.INVISIBLE
+                binding.newEntries.visibility = View.GONE
             }
         }
 

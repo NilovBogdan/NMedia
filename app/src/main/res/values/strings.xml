@@ -8,6 +8,7 @@
     <string name="description_reposts">Reposts</string>
     <string name="description_count_repost">Number of reposts</string>
     <string name="description_count_views">Number of views</string>
+    <string name="description_new_entries">Upload new entries</string>
     <string name="menu_remove">Remove</string>
     <string name="post_text">Post Text</string>
     <string name="description_add_post">Add post</string>
@@ -31,6 +32,7 @@
     <string name="like_try_again">Something went wrong, try again</string>
     <string name="try_again">Try again</string>
     <string name="close">Close</string>
+    <string name="new_entries">New entries</string>
 
 
 </resources>
