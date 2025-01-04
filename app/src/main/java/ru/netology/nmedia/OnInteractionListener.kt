@@ -10,4 +10,5 @@ interface OnInteractionListener {
     fun onRemove(post: Post){}
     fun playVideo(url: String?){}
     fun details(post: Post){}
+    fun fullScreenImage(post: Post){}
 }

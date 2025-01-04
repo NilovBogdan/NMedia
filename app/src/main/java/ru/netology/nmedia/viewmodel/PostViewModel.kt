@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +52,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val dataState: LiveData<FeedModelState>
         get() = _dataState
     val postCreated: LiveData<Unit> = _postCreated
+    private val _photo = MutableLiveData<PhotoModel?>(null)
+    val photo: LiveData<PhotoModel?> = _photo
 
     init {
         load()
@@ -137,12 +138,25 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun applyChangesAndSave(newText: String) {
-        edited.value?.let {
+        edited.value?.let { post ->
             viewModelScope.launch {
                 val text = newText.trim()
-                if (text != it.content) {
-                    repository.save(it.copy(content = text))
-                    _postCreated.postValue(Unit)
+                try {
+                    if (text != post.content) {
+                        _photo.value?.let {
+                            repository.saveWithAttachment(post.copy(content = text), it)
+                        } ?: repository.save(post.copy(content = text))
+                        _postCreated.postValue(Unit)
+                    }
+                } catch (e: AppError) {
+                    when (e) {
+                        is ApiError -> _dataState.value = FeedModelState(error = FeedError.API)
+                        is NetworkError -> _dataState.value =
+                            FeedModelState(error = FeedError.NETWORK)
+
+                        is UnknownError -> _dataState.value =
+                            FeedModelState(error = FeedError.UNKNOWN)
+                    }
                 }
             }
             edited.postValue(empty)
@@ -178,6 +192,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
         }
+    }
+
+    fun savePhoto(photoModel: PhotoModel?) {
+        _photo.value = photoModel
     }
 
 

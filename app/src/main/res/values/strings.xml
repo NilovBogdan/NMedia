@@ -9,6 +9,9 @@
     <string name="description_count_repost">Number of reposts</string>
     <string name="description_count_views">Number of views</string>
     <string name="description_new_entries">Upload new entries</string>
+    <string name="description_back">Back</string>
+    <string name="description_image">Back</string>
+
     <string name="menu_remove">Remove</string>
     <string name="post_text">Post Text</string>
     <string name="description_add_post">Add post</string>
@@ -33,6 +36,8 @@
     <string name="try_again">Try again</string>
     <string name="close">Close</string>
     <string name="new_entries">New entries</string>
+    <string name="clear">Clear</string>
+    <string name="image_picker_error">Image picker error</string>
 
 
 </resources>

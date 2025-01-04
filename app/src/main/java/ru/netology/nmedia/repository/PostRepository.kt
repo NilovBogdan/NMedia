@@ -1,6 +1,7 @@
 package ru.netology.nmedia.repository
 import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.viewmodel.PhotoModel
 
 interface PostRepository {
     val data: Flow<List<Post>>
@@ -13,5 +14,6 @@ interface PostRepository {
     suspend fun save(post: Post)
     suspend fun playVideo(url: String)
     suspend fun readAll ()
+    suspend fun saveWithAttachment(post: Post, photoModel: PhotoModel)
     fun logicLikeAndRepost(count: Double): String
 }

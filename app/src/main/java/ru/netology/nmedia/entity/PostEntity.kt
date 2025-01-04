@@ -1,4 +1,5 @@
 package ru.netology.nmedia.entity
+
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,7 +8,7 @@ import ru.netology.nmedia.dto.Post
 
 
 @Entity
-data class PostEntity (
+data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
@@ -19,20 +20,46 @@ data class PostEntity (
     val views: String? = null,
     val likedByMe: Boolean,
     val visible: Boolean = true,
-    val urlVideo:String? = null,
+    val urlVideo: String? = null,
     @Embedded
-    val attachment: Attachment?
-){
+    val attachment: Attachment?,
+) {
 
 
+    fun toDto() = Post(
+        id = id,
+        author = author,
+        authorAvatar = authorAvatar,
+        content = content,
+        published = published,
+        likes = likes,
+        repost = repost,
+        views = views,
+        likedByMe = likedByMe,
+        urlVideo = urlVideo,
+        attachment = attachment?.toDto()
+    )
 
-    fun toDto() = Post(id, author, authorAvatar, content, published, likes, repost, views, likedByMe, urlVideo, attachment?.toDto())
-
-    companion object{
-        fun fromDto (post: Post, isVisible: Boolean = true) = PostEntity(post.id, post.author, post.authorAvatar, post.content, post.published, post.likes, post.repost, post.views, post.likedByMe, visible = isVisible, post.urlVideo, Attachment.fromDto(post.attachment), )
+    companion object {
+        fun fromDto(post: Post, isVisible: Boolean = true) = PostEntity(
+            id = post.id,
+            author = post.author,
+            authorAvatar = post.authorAvatar,
+            content = post.content,
+            published = post.published,
+            likes = post.likes,
+            repost = post.repost,
+            views = post.views,
+            likedByMe = post.likedByMe,
+            visible = isVisible,
+            urlVideo = post.urlVideo,
+            attachment = Attachment.fromDto(post.attachment),
+        )
     }
 }
 
 
-fun List<Post>.toEntity(isVisible: Boolean = true): List<PostEntity> = map { PostEntity.fromDto(it, isVisible) }
-fun List<PostEntity>.toDto() = map{it.toDto()}
+fun List<Post>.toEntity(isVisible: Boolean = true): List<PostEntity> =
+    map { PostEntity.fromDto(it, isVisible) }
+
+fun List<PostEntity>.toDto() = map { it.toDto() }

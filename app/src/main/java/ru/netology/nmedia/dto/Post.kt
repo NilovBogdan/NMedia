@@ -12,19 +12,18 @@ data class Post(
     val repost: Int,
     val views: String?,
     val likedByMe: Boolean,
-    val urlVideo:String?,
-    val attachment :Attachment?
+    val urlVideo:String? = null,
+    val attachment :Attachment? = null
 )
 data class Attachment(
     val url: String,
-    val description: String?,
     val type: AttachmentType,
 ){
-    fun toDto() = Attachment(url, description, type)
+    fun toDto() = Attachment(url, type)
 
     companion object {
         fun fromDto(dto: Attachment?) = dto?.let {
-            Attachment(it.url,it.description, it.type)
+            Attachment(it.url, it.type)
         }
 
     }

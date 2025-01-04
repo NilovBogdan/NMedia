@@ -4,7 +4,6 @@ package ru.netology.nmedia.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +44,14 @@ class FeedFragment : Fragment() {
                 findNavController().navigate(
                     R.id.action_feedFragment_to_detailsFragment,
                     Bundle().apply { longArg = post.id })
+            }
+
+            override fun fullScreenImage(post: Post) {
+                val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
+                findNavController().navigate(R.id.action_feedFragment_to_imageFragment,
+                    Bundle().apply { textArg = urlAttachment
+                        longArg = post.id},
+                )
             }
 
             override fun onRemove(post: Post) {

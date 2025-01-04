@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".activity.ImageFragment">
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/back"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_spacing"
+        android:background="@android:color/transparent"
+        android:checkable="false"
+        android:contentDescription="@string/description_likes"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_west_24" />
+
+
+    <com.ortiz.touchview.TouchImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/description_image"
+        tools:src="@tools:sample/avatars" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/like"
+        style="@style/Widget.AppThem.LikeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_margin="@dimen/common_spacing"
+        android:background="@android:color/transparent"
+        android:checkable="true"
+        android:contentDescription="@string/description_likes"
+        android:paddingHorizontal="24dp"
+        android:textColor="@color/gray"
+        app:icon="@drawable/ic_like_24" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/comments"
+        style="@style/Widget.AppThem.LikeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_margin="@dimen/common_spacing"
+        android:background="@android:color/transparent"
+        android:checkable="true"
+        android:contentDescription="@string/description_likes"
+        android:paddingHorizontal="24dp"
+        android:textColor="@color/gray"
+        app:icon="@drawable/ic_comments_24" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/reposts"
+        style="@style/Widget.AppThem.LikeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/common_spacing"
+        android:background="@android:color/transparent"
+        android:checkable="false"
+        android:contentDescription="@string/description_likes"
+        android:paddingHorizontal="24dp"
+        android:textColor="@color/gray"
+        app:icon="@drawable/ic_baseline_share_24" />
+</FrameLayout>
+
+

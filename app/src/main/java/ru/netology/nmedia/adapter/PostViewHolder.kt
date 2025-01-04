@@ -15,8 +15,8 @@ class PostViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
         binding.apply {
-            val url = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
-            val urlAttachment = "http://10.0.2.2:9999/images/${post.attachment?.url}"
+            val urlAvatar = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+            val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
             author.text = post.author
             content.text = post.content
             published.text = post.published
@@ -45,6 +45,9 @@ class PostViewHolder(
             content.setOnClickListener {
                 onInteractionListener.details(post)
             }
+            attachment.setOnClickListener {
+                onInteractionListener.fullScreenImage(post)
+            }
             Glide.with(binding.attachment)
                 .load(urlAttachment)
                 .placeholder(R.drawable.ic_loading_100dp)
@@ -58,7 +61,7 @@ class PostViewHolder(
                 attachment.visibility = View.GONE
             }
             Glide.with(binding.author)
-                .load(url)
+                .load(urlAvatar)
                 .placeholder(R.drawable.ic_loading_100dp)
                 .error(R.drawable.ic_error_100dp)
                 .timeout(50_000)

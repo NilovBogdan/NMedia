@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.DetailsFragment.Companion.longArg
 import ru.netology.nmedia.activity.NewAndChangePostFragment.Companion.textArg
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.databinding.FragmentDetailsBinding
 import ru.netology.nmedia.util.LongArg
+import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 
@@ -22,25 +25,57 @@ class DetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentDetailsBinding.inflate(inflater, container, false)
         val postId = arguments?.longArg ?: -1
         CardPostBinding.inflate(inflater, binding.container, true).apply {
             viewModel.data.observe(viewLifecycleOwner) { state ->
                 val post = state.posts.find { it.id == postId } ?: return@observe
+                val urlAvatar = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+                val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
                 author.text = post.author
                 content.text = post.content
                 published.text = post.published
                 reposts.text = viewModel.logicLikeAndRepost(post.repost.toDouble())
                 countViews.text = post.views
                 like.isChecked = post.likedByMe
-                like.text = viewModel.logicLikeAndRepost(post.likes.toDouble()).toString()
-                if (post.urlVideo != "null") {
+                like.text = viewModel.logicLikeAndRepost(post.likes.toDouble())
+
+                Glide.with(avatar)
+                    .load(urlAvatar)
+                    .placeholder(R.drawable.ic_loading_100dp)
+                    .error(R.drawable.ic_error_100dp)
+                    .timeout(50_000)
+                    .circleCrop()
+                    .into(avatar)
+
+                Glide.with(attachment)
+                    .load(urlAttachment)
+                    .placeholder(R.drawable.ic_loading_100dp)
+                    .error(R.drawable.ic_error_100dp)
+                    .timeout(30_000)
+                    .into(attachment)
+                if (post.attachment != null) {
+                    attachment.visibility = View.VISIBLE
+                } else {
+                    attachment.visibility = View.INVISIBLE
+                    attachment.visibility = View.GONE
+                }
+                if (post.urlVideo != null) {
                     videoGroup.visibility = View.VISIBLE
                 } else {
                     videoGroup.visibility = View.INVISIBLE
                     videoGroup.visibility = View.GONE
+                }
+                attachment.setOnClickListener {
+                    findNavController().navigate(
+                        R.id.action_detailsFragment_to_imageFragment,
+                        Bundle().apply {
+                            textArg = urlAttachment
+                            longArg = post.id
+                        },
+                    )
                 }
 //                play.setOnClickListener {
 //                    viewModel.playVideo(post.urlVideo)
@@ -95,5 +130,6 @@ class DetailsFragment : Fragment() {
 
     companion object {
         var Bundle.longArg by LongArg
+        var Bundle.textArg by StringArg
     }
 }

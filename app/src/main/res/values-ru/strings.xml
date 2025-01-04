@@ -10,6 +10,8 @@
     <string name="description_count_repost">Количество репостов</string>
     <string name="description_count_views">Количество просмотров</string>
     <string name="description_new_entries">Загрузить новые записи</string>
+    <string name="description_back">Назад</string>
+    <string name="description_image">Изображение</string>
     <string name="menu_remove">Удалить</string>
     <string name="post_text">Введите текст</string>
     <string name="description_add_post">Добавить пост</string>
@@ -34,6 +36,8 @@
     <string name="try_again">Попробовать снова</string>
     <string name="close">Закрыть</string>
     <string name="new_entries">Новые записи</string>
+    <string name="clear">Очистить</string>
+    <string name="image_picker_error">Ошибка выбора изображения</string>
 
 
 </resources>
