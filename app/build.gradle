@@ -48,6 +48,7 @@ android {
 
 dependencies {
     implementation libs.filament.android
+    implementation libs.androidx.annotation
     def core_version = "1.13.1"
     def appcompat_version = "1.7.0"
     def constraintlayout_version = "2.1.4"

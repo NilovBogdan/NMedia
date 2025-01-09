@@ -8,8 +8,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.error.ApiError
@@ -23,6 +25,7 @@ import ru.netology.nmedia.util.SingleLiveEvent
 private val empty = Post(
     id = 0L,
     "",
+    0L,
     "",
     "",
     "",
@@ -31,14 +34,21 @@ private val empty = Post(
     "",
     false,
     "null",
-    null
+    null,
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository =
         PostRepositoryRoomImpl(AppDb.getInstance(application).postDao)
-    val data = repository.data
-        .map { FeedModel(posts = it, empty = it.isEmpty()) }
+    val data =
+        AppAuth.getInstance().authState.flatMapLatest { token ->
+            repository.data
+                .map {
+                    FeedModel(posts = it.map { post ->
+                    post.copy(ownedByMe = post.authorId == token?.id)
+
+                }, empty = it.isEmpty()) }
+        }
         .asLiveData(Dispatchers.Default)
     val newerCount: LiveData<Int> = data.switchMap {
         val newerPostId = it.posts.firstOrNull()?.id ?: 0L
@@ -71,6 +81,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
+    }
+
+    fun checkAuth(check: Boolean): Boolean{
+        return check
     }
 
     fun likeById(id: Long) {

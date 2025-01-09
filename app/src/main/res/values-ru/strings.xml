@@ -22,6 +22,7 @@
     <string name="description_close">Отмена</string>
     <string name="chooser_share_post">Поделиться публикацией</string>
     <string name="save">Сохранить</string>
+    <string name="description_add_photo">Добавить фото</string>
     <string name="description_play_video">Включить видео</string>
     <string name="description_preview">Обложка видео</string>
     <string name="channel_name">Уведомление</string>
@@ -38,6 +39,24 @@
     <string name="new_entries">Новые записи</string>
     <string name="clear">Очистить</string>
     <string name="image_picker_error">Ошибка выбора изображения</string>
+    <string name="logout">Выход из системы</string>
+    <string name="singIn">Регистрация</string>
+    <string name="logIn">Авторизация</string>
+    <string name="prompt_login">Логин</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="or_register">Или зарегистрируйтесь</string>
+    <string name="enter">Войти</string>
+    <string name="invalid_username_or_password">Неверный логин или пароль, повторите попытку</string>
+    <string name="authorization_is_required_to_continue">Для продолжения необхадима авторизация</string>
+    <string name="the_action_cannot_be_performed">Действие не может быть выполнено</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="prompt_name">Имя</string>
+    <string name="prompt_password_replay">Повторите пароль</string>
+    <string name="or_enter">Или войти</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="passwords_dont_match">Пароли не совпадают</string>
 
 
 </resources>

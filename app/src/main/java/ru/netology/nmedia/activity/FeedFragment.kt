@@ -1,6 +1,7 @@
 package ru.netology.nmedia.activity
 
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,6 +22,7 @@ import ru.netology.nmedia.activity.NewAndChangePostFragment.Companion.textArg
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.FeedError
 import ru.netology.nmedia.viewmodel.PostViewModel
 
@@ -71,7 +74,21 @@ class FeedFragment : Fragment() {
 //            }
 
             override fun onLike(post: Post) {
-                viewModel.likeById(post.id)
+                val authViewModel by viewModels<AuthViewModel>()
+                if (viewModel.checkAuth(authViewModel.isAuthorized)) {
+                    viewModel.likeById(post.id)
+                }else{
+                    AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.the_action_cannot_be_performed)
+                        .setMessage(R.string.authorization_is_required_to_continue)
+                        .setPositiveButton( R.string.logIn) { _: DialogInterface, _: Int ->
+                            findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
+                        }
+                        .setNegativeButton(R.string.close) {_: DialogInterface, _: Int -> }
+                        .show()
+
+                }
+
             }
 
             override fun playVideo(url: String?) {
@@ -133,7 +150,22 @@ class FeedFragment : Fragment() {
             }
         }
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment)
+            val authViewModel by viewModels<AuthViewModel>()
+            if (viewModel.checkAuth(authViewModel.isAuthorized)) {
+                findNavController().navigate(R.id.action_feedFragment_to_newAndChangePostFragment)
+            }else{
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.the_action_cannot_be_performed)
+                    .setMessage(R.string.authorization_is_required_to_continue)
+                    .setPositiveButton( R.string.logIn) { _: DialogInterface, _: Int ->
+                        findNavController().navigate(R.id.action_feedFragment_to_singInFragment)
+                    }
+                    .setNegativeButton(R.string.close) {_: DialogInterface, _: Int -> }
+                    .show()
+
+            }
+
+
 
         }
 

@@ -30,7 +30,17 @@ import kotlin.time.Duration.Companion.seconds
 
 
 class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
-    override val data = dao.getAllVisible().map(List<PostEntity>::toDto)
+
+    private suspend fun upload(photoModel: PhotoModel): Media =
+        PostsApi.service.upload(
+            MultipartBody.Part.createFormData(
+                "file",
+                photoModel.file.name,
+                photoModel.file.asRequestBody()
+            )
+        )
+//
+    override val data: Flow<List<Post>> = dao.getAllVisible().map (List<PostEntity> :: toDto)
 
     override fun getNewerCount(newerId: Long): Flow<Int> = flow {
         while (true) {
@@ -47,36 +57,7 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
 //
             }
         }
-    }
-        .flowOn(Dispatchers.Default)
-
-    override suspend fun readAll() {
-        try {
-            dao.readAll()
-        } catch (e: ApiError) {
-            throw e
-        } catch (e: IOException) {
-            throw NetworkError
-        } catch (_: Exception) {
-            throw UnknownError
-        }
-    }
-
-    override suspend fun saveWithAttachment(post: Post, photoModel: PhotoModel) {
-        val media = upload(photoModel)
-        val postWithAttachment = post.copy(attachment = Attachment(media.id, AttachmentType.IMAGE))
-        save(postWithAttachment)
-    }
-
-    private suspend fun upload(photoModel: PhotoModel): Media =
-        PostsApi.service.upload(
-            MultipartBody.Part.createFormData(
-                "file",
-                photoModel.file.name,
-                photoModel.file.asRequestBody()
-            )
-        )
-
+    }.flowOn(Dispatchers.Default)
 
     override suspend fun getAll() {
         try {
@@ -135,6 +116,10 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
         }
     }
 
+    override suspend fun shareById(id: Long) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun removeById(id: Long) {
         val currentState = data
         try {
@@ -185,6 +170,28 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
         }
     }
 
+    override suspend fun playVideo(url: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun readAll() {
+        try {
+            dao.readAll()
+        } catch (e: ApiError) {
+            throw e
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (_: Exception) {
+            throw UnknownError
+        }
+    }
+
+    override suspend fun saveWithAttachment(post: Post, photoModel: PhotoModel) {
+        val media = upload(photoModel)
+        val postWithAttachment = post.copy(attachment = Attachment(media.id, AttachmentType.IMAGE))
+        save(postWithAttachment)
+    }
+
     override fun logicLikeAndRepost(count: Double): String {
         val cl: Double = (count / 1000)
         var result = "${count.toInt()}"
@@ -204,16 +211,6 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
             result = df.format(cl / 1000) + "M"
         }
         return result
-    }
-
-
-    override suspend fun shareById(id: Long) {
-        TODO("Not yet implemented")
-    }
-
-
-    override suspend fun playVideo(url: String) {
-        TODO("Not yet implemented")
     }
 
 
