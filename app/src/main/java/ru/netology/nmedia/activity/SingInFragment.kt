@@ -29,18 +29,14 @@ class SingInFragment : Fragment() {
             val previousFragment = findNavController().previousBackStackEntry?.destination?.id
             previousFragment?.let {
                 when (previousFragment) {
-                    R.id.singUp
-                         -> findNavController().navigate(R.id.action_singInFragment_to_feedFragment)
-                    else -> findNavController().popBackStack()
+                    R.id.singUpFragment -> findNavController().navigate(R.id.action_singInFragment_to_feedFragment)
+                    else -> findNavController().navigateUp()
                 }
             }
-
-
-            findNavController().popBackStack()
         })
-        viewModel.singleError.observe(viewLifecycleOwner, Observer{
+        viewModel.singleError.observe(viewLifecycleOwner){
             Toast.makeText(requireContext(), R.string.invalid_username_or_password, Toast.LENGTH_SHORT,).show()
-        })
+        }
 
         binding.enter.setOnClickListener {
             val login = binding.login.text.toString()

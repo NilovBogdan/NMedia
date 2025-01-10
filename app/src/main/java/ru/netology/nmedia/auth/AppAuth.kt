@@ -29,7 +29,7 @@ class AppAuth private constructor(context: Context){
     fun setAuth(token: Token){
         prefs.edit {
             putLong(ID_KEY, token.id)
-            putString(ID_KEY, token.token)
+            putString(TOKEN_KEY, token.token)
         }
         _authState.value = token
     }

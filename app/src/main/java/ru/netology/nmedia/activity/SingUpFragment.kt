@@ -57,7 +57,7 @@ class SingUpFragment : Fragment() {
             val password = binding.password.text.toString()
             val passwordCheck = binding.passwordReplay.text.toString()
             if (password == passwordCheck){
-                viewModel.registration(name, login, password)
+                viewModel.registration(login, password, name)
             }else{
                 Toast.makeText(requireContext(), R.string.passwords_dont_match, Toast.LENGTH_SHORT).show()
             }

@@ -38,10 +38,10 @@ class SingUpViewModel: ViewModel() {
         }
     }
 
-    private fun registrationWithoutAvatar(login: String, password: String, name: String){
+    private fun registrationWithoutAvatar(login: String, pass: String, name: String){
         viewModelScope.launch {
             try {
-                val response = PostsApi.service.registrationWithoutAvatars(login, password, name)
+                val response = PostsApi.service.registrationWithoutAvatars(login, pass, name)
                 if (!response.isSuccessful) {
                     throw ApiError(response.code(), response.message())
                 }
