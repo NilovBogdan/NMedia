@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.dto.Token
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.NetworkError
@@ -27,7 +27,7 @@ class SingInViewModel:ViewModel() {
 fun authentication(login: String, password: String){
     viewModelScope.launch {
         try {
-            val response = PostsApi.service.authentication(login, password)
+            val response = Api.service.authentication(login, password)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }

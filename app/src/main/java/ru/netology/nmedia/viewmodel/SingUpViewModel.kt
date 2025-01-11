@@ -10,7 +10,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.dto.Token
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.NetworkError
@@ -41,7 +41,7 @@ class SingUpViewModel: ViewModel() {
     private fun registrationWithoutAvatar(login: String, pass: String, name: String){
         viewModelScope.launch {
             try {
-                val response = PostsApi.service.registrationWithoutAvatars(login, pass, name)
+                val response = Api.service.registrationWithoutAvatars(login, pass, name)
                 if (!response.isSuccessful) {
                     throw ApiError(response.code(), response.message())
                 }
@@ -64,7 +64,7 @@ class SingUpViewModel: ViewModel() {
             filename = "image.png",
             file.file.asRequestBody())
 
-        val response = PostsApi.service.registrationWithAvatar(
+        val response = Api.service.registrationWithAvatar(
             login.toRequestBody("text/plain".toMediaType()),
             password.toRequestBody("text/plain".toMediaType()),
             name.toRequestBody("text/plain".toMediaType()),
