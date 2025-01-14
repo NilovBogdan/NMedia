@@ -2,7 +2,6 @@ package ru.netology.nmedia.auth
 
 import android.content.Context
 import androidx.core.content.edit
-import com.google.firebase.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +27,7 @@ class AppAuth private constructor(context: Context){
         val token = prefs.getString(TOKEN_KEY, null)
         if (id == 0L || token == null){
             prefs.edit { clear() }
+            _authState.value = Token()
         }else{
             _authState.value = Token(id = id, token = token )
 
@@ -47,7 +47,7 @@ class AppAuth private constructor(context: Context){
         prefs.edit {
             clear()
         }
-        _authState.value = null
+        _authState.value = Token()
         sendPushToken()
     }
 
