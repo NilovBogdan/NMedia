@@ -25,9 +25,7 @@ jobs:
         run: echo $FIREBASE_SECRET > ./app/google-services.json
 
       - name: Build
-        run: |
-          chmod +x ./gradlew
-          ./gradlew build
+        run: --info
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
