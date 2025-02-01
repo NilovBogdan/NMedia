@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import ru.netology.nmedia.api.Api
+import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Media
@@ -26,13 +26,16 @@ import ru.netology.nmedia.viewmodel.PhotoModel
 import java.io.IOException
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
 
-class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
+class PostRepositoryRoomImpl @Inject constructor(
+    private val apiService: ApiService,
+    private val dao: PostDao) : PostRepository {
 
     private suspend fun upload(photoModel: PhotoModel): Media =
-        Api.service.upload(
+        apiService.upload(
             MultipartBody.Part.createFormData(
                 "file",
                 photoModel.file.name,
@@ -46,7 +49,7 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
         while (true) {
             try {
                 delay(10.seconds)
-                val response = Api.service.getNewer(newerId)
+                val response = apiService.getNewer(newerId)
                 val posts = response.body() ?: throw ApiError(response.code(), response.message())
                 dao.insert(posts.toEntity(false))
                 emit(posts.size)
@@ -61,7 +64,7 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun getAll() {
         try {
-            val response = Api.service.getAll()
+            val response = apiService.getAll()
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -79,7 +82,7 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
     override suspend fun likeById(id: Long) {
         try {
             dao.likeById(id)
-            val response = Api.service.likeById(id)
+            val response = apiService.likeById(id)
             if (!response.isSuccessful) {
 
                 throw ApiError(response.code(), response.message())
@@ -99,7 +102,7 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
     override suspend fun unLikeById(id: Long) {
         try {
             dao.likeById(id)
-            val response = Api.service.unLikeById(id)
+            val response = apiService.unLikeById(id)
             if (!response.isSuccessful) {
 
                 throw ApiError(response.code(), response.message())
@@ -123,7 +126,7 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
     override suspend fun removeById(id: Long) {
         val currentState = data
         try {
-            val response = Api.service.removeById(id)
+            val response = apiService.removeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -155,7 +158,7 @@ class PostRepositoryRoomImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun save(post: Post) {
         try {
-            val response = Api.service.save(post)
+            val response = apiService.save(post)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }

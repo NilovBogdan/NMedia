@@ -57,6 +57,7 @@
     <string name="or_enter">Или войти</string>
     <string name="register">Зарегистрироваться</string>
     <string name="passwords_dont_match">Пароли не совпадают</string>
+    <string name="google_play_unavailable">Google play недоступен</string>
 
 
 </resources>

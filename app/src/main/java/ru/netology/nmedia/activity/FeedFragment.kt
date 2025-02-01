@@ -12,9 +12,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.OnInteractionListener
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.DetailsFragment.Companion.longArg
@@ -26,6 +28,7 @@ import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.FeedError
 import ru.netology.nmedia.viewmodel.PostViewModel
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +36,7 @@ class FeedFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentFeedBinding.inflate(inflater, container, false)
-        val viewModel: PostViewModel by viewModels(ownerProducer = ::requireParentFragment)
+        val viewModel: PostViewModel by activityViewModels()
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
@@ -121,16 +124,16 @@ class FeedFragment : Fragment() {
                 binding.swipe.isRefreshing = false
             }
         }
-        viewModel.dataState.observe(viewLifecycleOwner) { state ->
-            binding.swipe.isRefreshing = state.loading
-            if (state.error != FeedError.NONE) {
-                Snackbar.make(binding.root, "Error: ${state.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry) {
-                        viewModel.load()
-                    }
-                    .show()
-            }
-        }
+//        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+//            binding.swipe.isRefreshing = state.loading
+//            if (state.error != FeedError.NONE) {
+//                Snackbar.make(binding.root, "Error: ${state.error}", Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(R.string.retry) {
+//                        viewModel.load()
+//                    }
+//                    .show()
+//            }
+//        }
         viewModel.newerCount.observe(viewLifecycleOwner) {
             if (it > 0)
                 binding.newEntries.visibility = View.VISIBLE

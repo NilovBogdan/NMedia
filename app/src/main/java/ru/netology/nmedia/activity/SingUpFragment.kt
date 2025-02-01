@@ -12,14 +12,18 @@ import androidx.core.net.toFile
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentSingUpBinding
 import ru.netology.nmedia.viewmodel.PhotoModel
 import ru.netology.nmedia.viewmodel.SingUpViewModel
+import javax.inject.Inject
 
-
-class SingUpFragment : Fragment() {
+@AndroidEntryPoint
+class SingUpFragment @Inject constructor(
+    private val appAuth: AppAuth
+) : Fragment() {
     private val viewModel: SingUpViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +68,7 @@ class SingUpFragment : Fragment() {
         }
 
         viewModel.data.observe(viewLifecycleOwner){ state ->
-            AppAuth.getInstance().setAuth(state ?: return@observe)
+            appAuth.setAuth(state ?: return@observe)
             findNavController().navigate(R.id.action_singUpFragment_to_feedFragment)
         }
 

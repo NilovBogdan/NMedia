@@ -9,13 +9,17 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.databinding.FragmentSingInBinding
 import ru.netology.nmedia.viewmodel.SingInViewModel
+import javax.inject.Inject
 
-
-class SingInFragment : Fragment() {
+@AndroidEntryPoint
+class SingInFragment@Inject constructor(
+    private val appAuth: AppAuth
+) : Fragment() {
     private val viewModel: SingInViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,7 +29,7 @@ class SingInFragment : Fragment() {
         val binding = FragmentSingInBinding.inflate(inflater, container, false)
 
         viewModel.data.observe(viewLifecycleOwner, Observer { state ->
-            AppAuth.getInstance().setAuth(state ?: return@Observer)
+            appAuth.setAuth(state ?: return@Observer)
             val previousFragment = findNavController().previousBackStackEntry?.destination?.id
             previousFragment?.let {
                 when (previousFragment) {

@@ -4,17 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.api.Api
+import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dto.Token
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.NetworkError
 import ru.netology.nmedia.error.UnknownError
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.IOException
+import javax.inject.Inject
 
-
-class SingInViewModel:ViewModel() {
+@HiltViewModel
+class SingInViewModel@Inject constructor(
+private val apiService: ApiService
+):ViewModel() {
 
 
     private val _data = MutableLiveData<Token?>(null)
@@ -27,7 +31,7 @@ class SingInViewModel:ViewModel() {
 fun authentication(login: String, password: String){
     viewModelScope.launch {
         try {
-            val response = Api.service.authentication(login, password)
+            val response = apiService.authentication(login, password)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
