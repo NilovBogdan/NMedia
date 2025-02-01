@@ -60,8 +60,6 @@ class PostViewModel@Inject constructor(
     val singleError: LiveData<Unit>
         get() = _singleError
     private val _dataState = MutableLiveData<FeedModelState>()
-    val dataState: LiveData<FeedModelState>
-        get() = _dataState
     val postCreated: LiveData<Unit> = _postCreated
     private val _photo = MutableLiveData<PhotoModel?>(null)
     val photo: LiveData<PhotoModel?> = _photo
