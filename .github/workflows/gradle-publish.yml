@@ -25,11 +25,14 @@ jobs:
         run: echo $FIREBASE_SECRET > ./app/google-services.json
 
       - name: Build
-        run: --info
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           path: app/build/outputs/apk/debug/app-debug.apk
           pattern: Set up JDK 17-*
           merge-multiple: true
-          overwrite: true
+          
