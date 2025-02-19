@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -17,10 +18,10 @@ import ru.netology.nmedia.viewmodel.SingInViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SingInFragment@Inject constructor(
-    private val appAuth: AppAuth
-) : Fragment() {
-    private val viewModel: SingInViewModel by viewModels()
+class SingInFragment: Fragment() {
+    @Inject
+    lateinit var appAuth: AppAuth
+    private val viewModel: SingInViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
