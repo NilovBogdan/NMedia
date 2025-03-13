@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,7 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.map
+import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -123,23 +122,25 @@ class FeedFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { state ->
-                    binding.swipe.setOnRefreshListener {
-                        viewModel.load()
-                        binding.swipe.isRefreshing = false
-                    }
                     binding.retry.setOnClickListener {
                         viewModel.load()
                     }
-                    binding.swipe.setOnRefreshListener {
-                        viewModel.load()
-                        binding.swipe.isRefreshing = false
-                    }
+//                    binding.swipe.setOnRefreshListener {
+//                        viewModel.load()
+//                        binding.swipe.isRefreshing = false
+//                    }
+
+                    binding.swipe.isRefreshing =
+                        state.refresh is LoadState.Loading||
+                                state.prepend is LoadState.Loading ||
+                                state.append is LoadState.Loading
                     adapter.addOnPagesUpdatedListener {
                         binding.list.smoothScrollToPosition(0)
                     }
                 }
             }
         }
+        binding.swipe.setOnRefreshListener(adapter::refresh)
 
 
 

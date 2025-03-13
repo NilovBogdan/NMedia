@@ -31,6 +31,8 @@ interface PostDao {
     @Query("UPDATE PostEntity SET content = :content WHERE id = :postId")
     suspend fun changeContent(postId: Long, content: String)
 
+    @Query("SELECT COUNT(*) == 0 FROM PostEntity")
+    suspend fun isEmpty(): Boolean
 
     @Query(
         """

@@ -71,9 +71,9 @@ class PostViewModel@Inject constructor(
     private val _photo = MutableLiveData<PhotoModel?>(null)
     val photo: LiveData<PhotoModel?> = _photo
 
-    init {
-        load()
-    }
+//    init {
+//        load()
+//    }
 
     fun readAll() {
         viewModelScope.launch {
