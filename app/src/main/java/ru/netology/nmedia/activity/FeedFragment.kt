@@ -14,8 +14,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.map
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.netology.nmedia.OnInteractionListener
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.DetailsFragment.Companion.longArg
@@ -104,24 +110,54 @@ class FeedFragment : Fragment() {
 
 
         binding.list.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
-            val newPost =
-                state.posts.size > adapter.currentList.size && adapter.currentList.isNotEmpty()
-            adapter.submitList(state.posts) {
-                if (newPost) {
-                    binding.list.smoothScrollToPosition(0)
-                }
-            }
-//            binding.errorGroup.isVisible = state.error
-            binding.empty.isVisible = state.empty
-            binding.retry.setOnClickListener {
-                viewModel.load()
-            }
-            binding.swipe.setOnRefreshListener {
-                viewModel.load()
-                binding.swipe.isRefreshing = false
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+               viewModel.data.collectLatest{
+                   adapter.submitData(it)
+               }
+
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { state ->
+                    binding.swipe.setOnRefreshListener {
+                        viewModel.load()
+                        binding.swipe.isRefreshing = false
+                    }
+                    binding.retry.setOnClickListener {
+                        viewModel.load()
+                    }
+                    binding.swipe.setOnRefreshListener {
+                        viewModel.load()
+                        binding.swipe.isRefreshing = false
+                    }
+                    adapter.addOnPagesUpdatedListener {
+                        binding.list.smoothScrollToPosition(0)
+                    }
+                }
+            }
+        }
+
+
+
+
+
+//        viewModel.data.observe(viewLifecycleOwner) { state ->
+//            val newPost =
+//                state.posts.size > adapter.currentList.size && adapter.currentList.isNotEmpty()
+//            adapter.submitList(state.posts) {
+//                if (newPost) {
+//
+//                }
+//            }
+////            binding.errorGroup.isVisible = state.error
+//            binding.empty.isVisible = state.empty
+//
+//
+//        }
 //        viewModel.dataState.observe(viewLifecycleOwner) { state ->
 //            binding.swipe.isRefreshing = state.loading
 //            if (state.error != FeedError.NONE) {
@@ -132,15 +168,15 @@ class FeedFragment : Fragment() {
 //                    .show()
 //            }
 //        }
-        viewModel.newerCount.observe(viewLifecycleOwner) {
-            if (it > 0)
-                binding.newEntries.visibility = View.VISIBLE
-            binding.newEntries.setOnClickListener {
-                viewModel.readAll()
-                binding.newEntries.visibility = View.INVISIBLE
-                binding.newEntries.visibility = View.GONE
-            }
-        }
+//        viewModel.newerCount.observe(viewLifecycleOwner) {
+//            if (it > 0)
+//                binding.newEntries.visibility = View.VISIBLE
+//            binding.newEntries.setOnClickListener {
+//                viewModel.readAll()
+//                binding.newEntries.visibility = View.INVISIBLE
+//                binding.newEntries.visibility = View.GONE
+//            }
+//        }
 
         viewModel.singleError.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), R.string.like_try_again, Toast.LENGTH_SHORT).show()

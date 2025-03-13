@@ -1,6 +1,7 @@
 package ru.netology.nmedia.dao
 
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -56,5 +57,11 @@ interface PostDao {
 
     @Query("UPDATE PostEntity SET visible = 1")
     suspend fun readAll()
+
+    @Query("DELETE FROM PostEntity")
+    suspend fun removeAll()
+
+    @Query("SELECT * FROM PostEntity ORDER BY id DESC")
+    fun getPagingSource(): PagingSource<Int, PostEntity>
 
 }
