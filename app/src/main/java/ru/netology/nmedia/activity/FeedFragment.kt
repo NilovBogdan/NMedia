@@ -122,9 +122,9 @@ class FeedFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 adapter.loadStateFlow.collectLatest { state ->
-                    binding.retry.setOnClickListener {
-                        viewModel.load()
-                    }
+//                    binding.retry.setOnClickListener {
+//                        viewModel.load()
+//                    }
 //                    binding.swipe.setOnRefreshListener {
 //                        viewModel.load()
 //                        binding.swipe.isRefreshing = false

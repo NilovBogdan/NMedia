@@ -117,10 +117,10 @@ class NewAndChangePostFragment : Fragment() {
                 .createIntent(photoResultContract :: launch)
         }
 
-        viewModel.postCreated.observe(viewLifecycleOwner) {
-            findNavController().navigateUp()
-            viewModel.load()
-        }
+//        viewModel.postCreated.observe(viewLifecycleOwner) {
+//            findNavController().navigateUp()
+//            viewModel.load()
+//        }
         viewModel.singleError.observe(viewLifecycleOwner) {
             val dialogBinding = layoutInflater.inflate(R.layout.error_frame, container, false)
             val dialog = Dialog(requireContext())
@@ -132,7 +132,7 @@ class NewAndChangePostFragment : Fragment() {
             close.setOnClickListener {
                 dialog.dismiss()
                 findNavController().navigateUp()
-                viewModel.load()
+//                viewModel.load()
             }
             tryAgain.setOnClickListener {
                 dialog.dismiss()
