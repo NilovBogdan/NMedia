@@ -25,6 +25,7 @@ import ru.netology.nmedia.OnInteractionListener
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.DetailsFragment.Companion.longArg
 import ru.netology.nmedia.activity.NewAndChangePostFragment.Companion.textArg
+import ru.netology.nmedia.adapter.PostLoadingStateAdapter
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
@@ -108,7 +109,14 @@ class FeedFragment : Fragment() {
         })
 
 
-        binding.list.adapter = adapter
+        binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = PostLoadingStateAdapter{
+                adapter.retry()
+            },
+            footer = PostLoadingStateAdapter{
+                adapter.retry()
+            }
+        )
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -130,10 +138,7 @@ class FeedFragment : Fragment() {
 //                        binding.swipe.isRefreshing = false
 //                    }
 
-                    binding.swipe.isRefreshing =
-                        state.refresh is LoadState.Loading||
-                                state.prepend is LoadState.Loading ||
-                                state.append is LoadState.Loading
+                    binding.swipe.isRefreshing = state.refresh is LoadState.Loading
                     adapter.addOnPagesUpdatedListener {
                         binding.list.smoothScrollToPosition(0)
                     }

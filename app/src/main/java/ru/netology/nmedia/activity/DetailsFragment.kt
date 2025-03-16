@@ -44,94 +44,104 @@ class DetailsFragment : Fragment() {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.data.collectLatest { state ->
                         state.map{ post ->
-                            if (post.id == postId){
-                                val urlAvatar = "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
-                                val urlAttachment = "http://10.0.2.2:9999/media/${post.attachment?.url}"
-                                author.text = post.author
-                                content.text = post.content
-                                published.text = post.published
-                                reposts.text = viewModel.logicLikeAndRepost(post.repost.toDouble())
-                                countViews.text = post.views
-                                like.isChecked = post.likedByMe
-                                like.text = viewModel.logicLikeAndRepost(post.likes.toDouble())
+                            if (post is Post) {
+                                if (post.id == postId) {
+                                    val urlAvatar =
+                                        "http://10.0.2.2:9999/avatars/${post.authorAvatar}"
+                                    val urlAttachment =
+                                        "http://10.0.2.2:9999/media/${post.attachment?.url}"
+                                    author.text = post.author
+                                    content.text = post.content
+                                    published.text = post.published
+                                    reposts.text =
+                                        viewModel.logicLikeAndRepost(post.repost.toDouble())
+                                    countViews.text = post.views
+                                    like.isChecked = post.likedByMe
+                                    like.text = viewModel.logicLikeAndRepost(post.likes.toDouble())
 
-                                Glide.with(avatar)
-                                    .load(urlAvatar)
-                                    .placeholder(R.drawable.ic_loading_100dp)
-                                    .error(R.drawable.ic_error_100dp)
-                                    .timeout(50_000)
-                                    .circleCrop()
-                                    .into(avatar)
+                                    Glide.with(avatar)
+                                        .load(urlAvatar)
+                                        .placeholder(R.drawable.ic_loading_100dp)
+                                        .error(R.drawable.ic_error_100dp)
+                                        .timeout(50_000)
+                                        .circleCrop()
+                                        .into(avatar)
 
-                                Glide.with(attachment)
-                                    .load(urlAttachment)
-                                    .placeholder(R.drawable.ic_loading_100dp)
-                                    .error(R.drawable.ic_error_100dp)
-                                    .timeout(30_000)
-                                    .into(attachment)
-                                if (post.attachment != null) {
-                                    attachment.visibility = View.VISIBLE
-                                } else {
-                                    attachment.visibility = View.INVISIBLE
-                                    attachment.visibility = View.GONE
-                                }
-                                if (post.urlVideo != null) {
-                                    videoGroup.visibility = View.VISIBLE
-                                } else {
-                                    videoGroup.visibility = View.INVISIBLE
-                                    videoGroup.visibility = View.GONE
-                                }
-                                attachment.setOnClickListener {
-                                    findNavController().navigate(
-                                        R.id.action_detailsFragment_to_imageFragment,
-                                        Bundle().apply {
-                                            textArg = urlAttachment
-                                            longArg = post.id
-                                        },
-                                    )
-                                }
-                                //                play.setOnClickListener {
-                                //                    viewModel.playVideo(post.urlVideo)
-                                //                }
-                                //                preview.setOnClickListener {
-                                //                    viewModel.playVideo(post.urlVideo)
-                                //                }
-                                like.setOnClickListener {
-                                    viewModel.likeById(post.id)
-                                }
-                                reposts.setOnClickListener {
-                                    val intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        putExtra(Intent.EXTRA_TEXT, post.content)
-                                        type = "text/plain"
+                                    Glide.with(attachment)
+                                        .load(urlAttachment)
+                                        .placeholder(R.drawable.ic_loading_100dp)
+                                        .error(R.drawable.ic_error_100dp)
+                                        .timeout(30_000)
+                                        .into(attachment)
+                                    if (post.attachment != null) {
+                                        attachment.visibility = View.VISIBLE
+                                    } else {
+                                        attachment.visibility = View.INVISIBLE
+                                        attachment.visibility = View.GONE
                                     }
-                                    val shareIntent =
-                                        Intent.createChooser(intent, getString(R.string.chooser_share_post))
-                                    startActivity(shareIntent)
-                                //                    viewModel.shareById(post.id)
-                                }
-                                menu.setOnClickListener {
-                                    PopupMenu(it.context, it).apply {
-                                        inflate(R.menu.menu_post)
-                                        setOnMenuItemClickListener { item ->
-                                            when (item.itemId) {
-                                                R.id.remove -> {
-                                                    //                                    viewModel.removeById(post.id)
-                                                    findNavController().navigateUp()
-                                                    true
-                                                }
-
-                                                R.id.edit -> {
-                                                    viewModel.edit(post)
-                                                    findNavController().navigate(R.id.action_detailsFragment_to_newAndChangePostFragment,
-                                                        Bundle().apply { textArg = post.content })
-                                                    true
-                                                }
-
-                                                else -> false
-                                            }
+                                    if (post.urlVideo != null) {
+                                        videoGroup.visibility = View.VISIBLE
+                                    } else {
+                                        videoGroup.visibility = View.INVISIBLE
+                                        videoGroup.visibility = View.GONE
+                                    }
+                                    attachment.setOnClickListener {
+                                        findNavController().navigate(
+                                            R.id.action_detailsFragment_to_imageFragment,
+                                            Bundle().apply {
+                                                textArg = urlAttachment
+                                                longArg = post.id
+                                            },
+                                        )
+                                    }
+                                    //                play.setOnClickListener {
+                                    //                    viewModel.playVideo(post.urlVideo)
+                                    //                }
+                                    //                preview.setOnClickListener {
+                                    //                    viewModel.playVideo(post.urlVideo)
+                                    //                }
+                                    like.setOnClickListener {
+                                        viewModel.likeById(post.id)
+                                    }
+                                    reposts.setOnClickListener {
+                                        val intent = Intent().apply {
+                                            action = Intent.ACTION_SEND
+                                            putExtra(Intent.EXTRA_TEXT, post.content)
+                                            type = "text/plain"
                                         }
-                                    }.show()
+                                        val shareIntent =
+                                            Intent.createChooser(
+                                                intent,
+                                                getString(R.string.chooser_share_post)
+                                            )
+                                        startActivity(shareIntent)
+                                        //                    viewModel.shareById(post.id)
+                                    }
+                                    menu.setOnClickListener {
+                                        PopupMenu(it.context, it).apply {
+                                            inflate(R.menu.menu_post)
+                                            setOnMenuItemClickListener { item ->
+                                                when (item.itemId) {
+                                                    R.id.remove -> {
+                                                        //                                    viewModel.removeById(post.id)
+                                                        findNavController().navigateUp()
+                                                        true
+                                                    }
+
+                                                    R.id.edit -> {
+                                                        viewModel.edit(post)
+                                                        findNavController().navigate(R.id.action_detailsFragment_to_newAndChangePostFragment,
+                                                            Bundle().apply {
+                                                                textArg = post.content
+                                                            })
+                                                        true
+                                                    }
+
+                                                    else -> false
+                                                }
+                                            }
+                                        }.show()
+                                    }
                                 }
                             }
                         }

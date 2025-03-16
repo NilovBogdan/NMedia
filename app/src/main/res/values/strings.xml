@@ -60,9 +60,7 @@
     <string name="register">Register</string>
     <string name="passwords_dont_match">Passwords do not match</string>
     <string name="google_play_unavailable"> Google play unavailable</string>
-
-
-
+    <string name="retry_button">Retry</string>
 
 
 </resources>

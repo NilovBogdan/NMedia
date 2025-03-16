@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.DetailsFragment.Companion.longArg
 import ru.netology.nmedia.databinding.FragmentImageBinding
+import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 import kotlin.math.max
@@ -45,75 +46,82 @@ class ImageFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.data.collectLatest { state ->
                     state.map { post ->
-                        if (post.id == postId){
-                            binding.like.text = viewModel.logicLikeAndRepost(post.likes.toDouble())
-                            binding.like.isChecked = post.likedByMe
-                            binding.reposts.text = viewModel.logicLikeAndRepost(post.repost.toDouble())
+                        if (post is Post) {
+                            if (post.id == postId) {
+                                binding.like.text =
+                                    viewModel.logicLikeAndRepost(post.likes.toDouble())
+                                binding.like.isChecked = post.likedByMe
+                                binding.reposts.text =
+                                    viewModel.logicLikeAndRepost(post.repost.toDouble())
 
-                            Glide.with(binding.image) // Получение вложения
-                                .load(urlAttachment)
-                                .placeholder(R.drawable.ic_loading_100dp)
-                                .error(R.drawable.ic_error_100dp)
-                                .timeout(30_000)
-                                .into(binding.image)
+                                Glide.with(binding.image) // Получение вложения
+                                    .load(urlAttachment)
+                                    .placeholder(R.drawable.ic_loading_100dp)
+                                    .error(R.drawable.ic_error_100dp)
+                                    .timeout(30_000)
+                                    .into(binding.image)
 
 
-                            binding.image.setOnTouchListener(View.OnTouchListener { view, event -> // Выход из режима просмотра свайпом вниз
-                                val displayMetrics = resources.displayMetrics
-                                val cardHeight = binding.image.height
-                                val cardStart =
-                                    (displayMetrics.heightPixels.toFloat() / 2) - (cardHeight / 2)
-                                val minSwipeDistance = 900
-                                val currentY = binding.image.y
-                                when (event.action) {
-                                    MotionEvent.ACTION_UP -> {
-                                        binding.image.animate()
-                                            .y(cardStart)
-                                            .setDuration(150)
-                                            .start()
-                                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                                            delay(1000)
-                                            if (currentY > minSwipeDistance) {
-                                                findNavController().navigateUp()
+                                binding.image.setOnTouchListener(View.OnTouchListener { view, event -> // Выход из режима просмотра свайпом вниз
+                                    val displayMetrics = resources.displayMetrics
+                                    val cardHeight = binding.image.height
+                                    val cardStart =
+                                        (displayMetrics.heightPixels.toFloat() / 2) - (cardHeight / 2)
+                                    val minSwipeDistance = 900
+                                    val currentY = binding.image.y
+                                    when (event.action) {
+                                        MotionEvent.ACTION_UP -> {
+                                            binding.image.animate()
+                                                .y(cardStart)
+                                                .setDuration(150)
+                                                .start()
+                                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                                                delay(1000)
+                                                if (currentY > minSwipeDistance) {
+                                                    findNavController().navigateUp()
+                                                }
+                                            }
+                                        }
+
+                                        MotionEvent.ACTION_MOVE -> {
+                                            val newY = event.rawY
+                                            if (newY - cardHeight < cardStart) {
+                                                binding.image.animate()
+                                                    .y(max(cardStart, newY - (cardHeight / 2)))
+                                                    .setDuration(0)
+                                                    .start()
                                             }
                                         }
                                     }
+                                    view.performClick()
+                                    return@OnTouchListener true
+                                })
 
-                                    MotionEvent.ACTION_MOVE -> {
-                                        val newY = event.rawY
-                                        if (newY - cardHeight < cardStart) {
-                                            binding.image.animate()
-                                                .y(max(cardStart, newY - (cardHeight / 2)))
-                                                .setDuration(0)
-                                                .start()
-                                        }
+
+                                binding.like.setOnClickListener {
+                                    viewModel.likeById(postId)
+                                }
+
+
+                                binding.back.setOnClickListener {
+                                    findNavController().navigateUp()
+                                }
+
+
+                                binding.reposts.setOnClickListener {
+                                    val intent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, post.content)
+                                        type = "text/plain"
                                     }
+                                    val shareIntent =
+                                        Intent.createChooser(
+                                            intent,
+                                            getString(R.string.chooser_share_post)
+                                        )
+                                    startActivity(shareIntent)
+                                    //                    viewModel.shareById(post.id)
                                 }
-                                view.performClick()
-                                return@OnTouchListener true
-                            })
-
-
-                            binding.like.setOnClickListener {
-                                viewModel.likeById(postId)
-                            }
-
-
-                            binding.back.setOnClickListener {
-                                findNavController().navigateUp()
-                            }
-
-
-                            binding.reposts.setOnClickListener {
-                                val intent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, post.content)
-                                    type = "text/plain"
-                                }
-                                val shareIntent =
-                                    Intent.createChooser(intent, getString(R.string.chooser_share_post))
-                                startActivity(shareIntent)
-                            //                    viewModel.shareById(post.id)
                             }
                         }
                     }

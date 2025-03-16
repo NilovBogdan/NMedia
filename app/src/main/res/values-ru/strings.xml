@@ -58,6 +58,7 @@
     <string name="register">Зарегистрироваться</string>
     <string name="passwords_dont_match">Пароли не совпадают</string>
     <string name="google_play_unavailable">Google play недоступен</string>
+    <string name="retry_button">Retry</string>
 
 
 </resources>
